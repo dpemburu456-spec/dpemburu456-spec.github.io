@@ -1,5 +1,6 @@
 let currentView = 'elit'; 
 let globalCoinsData = [];
+let tradingViewWidgetLoaded = false;
 
 function openNav() {
     document.getElementById("mySidebar").style.width = "260px";
@@ -12,25 +13,91 @@ function closeNav() {
 
 function switchTab(tabType) {
     currentView = tabType;
-    document.getElementById('top-tabs').style.display = 'flex';
-    document.getElementById('tab-elit').classList.remove('active');
-    document.getElementById('tab-populer').classList.remove('active');
     
-    if (tabType === 'elit') {
-        document.getElementById('tab-elit').classList.add('active');
-        document.getElementById('page-title-text').innerText = "Pasar Global / Global Top 100";
+    const tabs = document.getElementById('top-tabs');
+    const marketContainer = document.getElementById('market-list-container');
+    const scannerContainer = document.getElementById('scanner-container');
+    const titleText = document.getElementById('page-title-text');
+
+    if (tabType === 'scanner') {
+        // TAMPILKAN HALAMAN SCANNER BINANCE
+        tabs.style.display = 'none';
+        marketContainer.style.display = 'none';
+        scannerContainer.style.display = 'block';
+        titleText.innerText = "🔍 Scanner Pasar Binance (Teknikal)";
+        loadTradingViewScanner();
     } else {
-        document.getElementById('tab-populer').classList.add('active');
-        document.getElementById('page-title-text').innerText = "Pasar Global / Kenaikan Tertinggi";
+        // TAMPILKAN HALAMAN UTAMA COINGECKO
+        tabs.style.display = 'flex';
+        marketContainer.style.display = 'block';
+        scannerContainer.style.display = 'none';
+        
+        document.getElementById('tab-elit').classList.remove('active');
+        document.getElementById('tab-populer').classList.remove('active');
+        
+        if (tabType === 'elit') {
+            document.getElementById('tab-elit').classList.add('active');
+            titleText.innerText = "Pasar Global / Global Top 100";
+        } else {
+            document.getElementById('tab-populer').classList.add('active');
+            titleText.innerText = "Pasar Global / Kenaikan Tertinggi";
+        }
+        renderMarketData();
     }
-    renderMarketData();
 }
 
 function showPumpPage() {
     currentView = 'pump';
     document.getElementById('top-tabs').style.display = 'none'; 
-    document.getElementById('page-title-text').innerText = "🚀 Sinyal Cuan / Detektor Pump";
+    document.getElementById('market-list-container').style.display = 'block';
+    document.getElementById('scanner-container').style.display = 'none';
+    document.getElementById('page-title-text').innerText = "🚀 Top Pump";
     renderMarketData();
+}
+
+// FUNGSI LOAD SCREENER JALUR TRADINGVIEW BINANCE MARKET
+function loadTradingViewScanner() {
+    const container = document.getElementById('scanner-container');
+    if (tradingViewWidgetLoaded) return; // Mencegah load ganda bikin lambat
+
+    container.innerHTML = `
+        <div class="tradingview-widget-container" style="height:550px;width:100%;">
+            <div id="tradingview_screener"></div>
+            <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-screener.js" async>
+            {
+                "width": "100%",
+                "height": "550",
+                "defaultColumn": "overview",
+                "screener_type": "crypto_mkt",
+                "displayCurrency": "USD",
+                "colorTheme": "dark",
+                "locale": "id",
+                "market": "crypto",
+                "symbols": {
+                    "providers": ["BINANCE"]
+                }
+            }
+            </script>
+        </div>
+    `;
+    
+    // Trik memaksa injeksi script TradingView agar aktif di browser mobile
+    const script = document.createElement('script');
+    script.type = 'text/javascript';
+    script.src = 'https://s3.tradingview.com/external-embedding/embed-widget-screener.js';
+    script.async = true;
+    script.innerHTML = JSON.stringify({
+        "width": "100%",
+        "height": "550",
+        "defaultColumn": "overview",
+        "screener_type": "crypto_mkt",
+        "displayCurrency": "USD",
+        "colorTheme": "dark",
+        "locale": "id",
+        "market": "crypto"
+    });
+    container.appendChild(script);
+    tradingViewWidgetLoaded = true;
 }
 
 async function fetchMarketData() {
@@ -49,6 +116,8 @@ async function fetchMarketData() {
 }
 
 function renderMarketData() {
+    if (currentView === 'scanner') return;
+    
     const container = document.getElementById('market-list-container');
     container.innerHTML = '';
     
@@ -107,4 +176,3 @@ function renderMarketData() {
 
 fetchMarketData();
 setInterval(fetchMarketData, 60000); 
-
