@@ -206,3 +206,51 @@ async function runScanner() {
 
 fetchMarketData();
 setInterval(fetchMarketData, 60000);
+
+function showCustomScanner() {
+    const container = document.getElementById('scanner-container');
+    document.getElementById('market-list-container').style.display = 'none';
+    document.getElementById('top-tabs').style.display = 'none';
+    container.style.display = 'block';
+    
+    container.innerHTML = `
+        <div class="scanner-ui">
+            <h3>Scanner Settings</h3>
+            <div class="input-group">
+                <input type="number" id="vol-min" class="input-field" placeholder="Min Vol">
+                <span>-</span>
+                <input type="number" id="vol-max" class="input-field" placeholder="Max Vol">
+            </div>
+            <button class="btn-scan" onclick="runScanner()">▶ Start Scanning</button>
+            <div id="scan-results" style="margin-top:20px;"></div>
+        </div>
+    `;
+    document.getElementById('page-title-text').innerText = "⚡ Detektor Koin Pump";
+}
+
+async function runScanner() {
+    const minVol = document.getElementById('vol-min').value;
+    const maxVol = document.getElementById('vol-max').value;
+    const resDiv = document.getElementById('scan-results');
+    
+    resDiv.innerHTML = "Memindai Binance...";
+    
+    // Mengambil data dari Binance API
+    const response = await fetch('https://api.binance.com/api/v3/ticker/24hr');
+    const data = await response.json();
+    
+    // Filter berdasarkan volume (contoh logic)
+    const filtered = data.filter(coin => 
+        coin.symbol.includes('USDT') && 
+        parseFloat(coin.quoteVolume) > minVol && 
+        parseFloat(coin.quoteVolume) < maxVol
+    ).slice(0, 5);
+
+    resDiv.innerHTML = filtered.map(c => `
+        <div class="crypto-row">
+            <span>${c.symbol}</span>
+            <span class="text-green">${c.priceChangePercent}%</span>
+        </div>
+    `).join('');
+}
+
