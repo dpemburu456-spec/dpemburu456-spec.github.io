@@ -3,27 +3,127 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sinyal Cuan Website</title>
+    <title>Sinyal Cuan - Crypto Pump Detector</title>
     <style>
+        /* Desain Tema Gelap Khas Crypto */
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #0b0e11;
+            color: #eaecef;
+            margin: 0;
+            padding: 0;
             text-align: center;
-            background-color: #f4f7f6;
-            padding: 50px;
         }
-        h1 {
-            color: #2ecc71;
+        header {
+            background-color: #181a20;
+            padding: 20px;
+            border-bottom: 1px solid #2b2f36;
         }
-        p {
-            color: #34495e;
+        header h1 {
+            color: #00c076;
+            margin: 0;
+            font-size: 28px;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+        .hero p {
             font-size: 18px;
+            color: #848e9c;
+        }
+        /* Gaya Kotak Sinyal */
+        .signal-card {
+            background-color: #181a20;
+            border: 1px solid #2b2f36;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            text-align: left;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+        }
+        .signal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #2b2f36;
+            padding-bottom: 10px;
+        }
+        .coin-name {
+            font-size: 20px;
+            font-weight: bold;
+        }
+        .status-pump {
+            background-color: #00c076;
+            color: #0b0e11;
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-weight: bold;
+            font-size: 14px;
+        }
+        .signal-body {
+            margin-top: 15px;
+            font-size: 16px;
+            color: #b5b7bc;
+        }
+        /* Tombol Aksi */
+        .btn-join {
+            display: inline-block;
+            background-color: #fcd535;
+            color: #0b0e11;
+            padding: 12px 30px;
+            border-radius: 4px;
+            text-decoration: none;
+            font-weight: bold;
+            margin-top: 30px;
+            transition: 0.3s;
+        }
+        .btn-join:hover {
+            background-color: #e2be2d;
         }
     </style>
 </head>
 <body>
 
-    <h1>Selamat Datang di Sinyal Cuan!</h1>
-    <p>Website HTML pertama saya yang berhasil dibuat lewat GitHub secara gratis.</p>
+    <header>
+        <h1>Sinyal Cuan Detector</h1>
+    </header>
+
+    <div class="container">
+        <div class="hero">
+            <h2>Pantau Sinyal Crypto Potensial Secara Real-Time</h2>
+            <p>Sistem kami mendeteksi pergerakan volume dan harga koin yang berpotensi melakukan Pump.</p>
+        </div>
+
+        <!-- Contoh Tampilan Sinyal 1 -->
+        <div class="signal-card">
+            <div class="signal-header">
+                <span class="coin-name">🚀 BTC / USDT</span>
+                <span class="status-pump">PUMP DETECTED</span>
+            </div>
+            <div class="signal-body">
+                <p><strong>Indikator:</strong> Kenaikan Volume > 15% dalam 15 Menit</p>
+                <p><strong>Rekomendasi:</strong> Pantau area support terdekat untuk entry.</p>
+            </div>
+        </div>
+
+        <!-- Contoh Tampilan Sinyal 2 -->
+        <div class="signal-card">
+            <div class="signal-header">
+                <span class="coin-name">🚀 ETH / USDT</span>
+                <span class="status-pump">POTENTIAL PUMP</span>
+            </div>
+            <div class="signal-body">
+                <p><strong>Indikator:</strong> Breakout Resistance Terkuat</p>
+                <p><strong>Rekomendasi:</strong> Siap-siap pasang posisi jika konfirmasi tembus.</p>
+            </div>
+        </div>
+
+        <!-- Tombol Komunitas -->
+        <a href="#" class="btn-join">Gabung Komunitas Sinyal Cuan</a>
+    </div>
 
 </body>
 </html>
+
