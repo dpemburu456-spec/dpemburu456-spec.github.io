@@ -148,15 +148,15 @@ header {
 .text-green { color: #02c076; }
 .text-red { color: #cf304a; }
 
-/* Gaya Desain Scanner Binance Widget */
 .scanner-block {
     background-color: #181a20;
     border: 1px solid #2b2f36;
     border-radius: 12px;
     padding: 10px;
-    min-height: 500px;
+    min-height: 550px;
 }
 
+/* KODE SIDEBAR YANG UTUH */
 .sidebar {
     height: 100%;
     width: 0;
