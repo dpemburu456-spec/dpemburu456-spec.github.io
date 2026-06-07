@@ -13,11 +13,35 @@
             padding: 0;
             text-align: center;
         }
-        header {
+                header {
             background-color: #181a20;
-            padding: 20px;
+            padding: 15px 20px;
             border-bottom: 1px solid #2b2f36;
+            display: flex;
+            align-items: center;
+            justify-content: flex-start; /* Membuat konten rapat ke kiri */
+            position: sticky;
+            top: 0;
+            z-index: 100;
         }
+        /* Tombol Garis 3 */
+        .menu-toggle {
+            background: none;
+            border: none;
+            color: #eaecef;
+            font-size: 24px;
+            cursor: pointer;
+            margin-right: 20px; /* Jarak antara garis 3 dan logo */
+            display: flex;
+            align-items: center;
+        }
+        /* Pengaturan Logo */
+        .logo-container img {
+            height: 40px; /* Ukuran tinggi logo biar pas di header */
+            width: auto;
+            display: block;
+        }
+
         header h1 {
             color: #00c076;
             margin: 0;
