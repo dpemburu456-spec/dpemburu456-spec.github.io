@@ -37,8 +37,6 @@ header {
     padding: 20px 15px;
     text-align: center;
 }
-
-/* Gaya Menu Tab di Atas Beranda */
 .tab-container {
     display: flex;
     background-color: #181a20;
@@ -63,7 +61,6 @@ header {
     background-color: #2b3139;
     color: #fcd535;
 }
-
 .section-title {
     text-align: left;
     font-size: 18px;
@@ -83,8 +80,6 @@ header {
     color: #fcd535;
     margin: 40px 0;
 }
-
-/* Tampilan Daftar Koin */
 .crypto-list {
     background-color: #181a20;
     border: 1px solid #2b2f36;
@@ -153,7 +148,15 @@ header {
 .text-green { color: #02c076; }
 .text-red { color: #cf304a; }
 
-/* Gaya Menu Samping (Sidebar) */
+/* Gaya Desain Scanner Binance Widget */
+.scanner-block {
+    background-color: #181a20;
+    border: 1px solid #2b2f36;
+    border-radius: 12px;
+    padding: 10px;
+    min-height: 500px;
+}
+
 .sidebar {
     height: 100%;
     width: 0;
@@ -200,4 +203,3 @@ header {
     background: rgba(0, 0, 0, 0.6);
     z-index: 199;
 }
-
