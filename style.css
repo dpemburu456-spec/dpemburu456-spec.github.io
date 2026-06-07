@@ -26,10 +26,22 @@ header {
     display: flex;
     align-items: center;
 }
+/* Kode lama dibuang, ganti dengan ini: */
+.logo-container {
+    flex-grow: 1; /* Membuat logo mengambil sisa ruang yang ada */
+    display: flex;
+    justify-content: center; /* Menengahkan logo */
+    padding-right: 40px; /* Memberi ruang agar logo tetap di tengah meski ada tombol menu */
+}
+
 .logo-container img {
-    height: 40px;
-    width: auto;
+    height: 40px; /* Sesuaikan tinggi jika ingin lebih besar */
+    width: 100%;  /* Memastikan logo melebar */
+    max-width: 200px; /* Batasi maksimal agar tidak pecah di layar lebar */
+    object-fit: contain;
     display: block;
+}
+
 }
 .container {
     max-width: 800px;
