@@ -1,76 +1,71 @@
-let currentView = 'elit'; 
-let globalCoinsData = [];
+let isScanning = false;
 
+// Fungsi Navigasi
 function openNav() { document.getElementById("mySidebar").style.width = "260px"; document.getElementById("myOverlay").style.display = "block"; }
 function closeNav() { document.getElementById("mySidebar").style.width = "0"; document.getElementById("myOverlay").style.display = "none"; }
 
-function switchTab(tabType) {
-    currentView = tabType;
-    document.getElementById('top-tabs').style.display = 'flex';
-    document.getElementById('market-list-container').style.display = 'block';
-    document.getElementById('scanner-container').style.display = 'none';
-    document.getElementById('page-title-text').innerText = "Pasar Global / Global Top 100";
-    renderMarketData();
-}
-
-function showPumpPage() {
-    currentView = 'pump';
-    document.getElementById('top-tabs').style.display = 'none';
-    document.getElementById('market-list-container').style.display = 'block';
-    document.getElementById('scanner-container').style.display = 'none';
-    document.getElementById('page-title-text').innerText = "🚀 Top Pump";
-    renderMarketData();
-}
-
-// FUNGSI SCANNER KUSTOM BARU
+// Fungsi Tampilan Utama
 function showCustomScanner() {
     const container = document.getElementById('scanner-container');
     document.getElementById('market-list-container').style.display = 'none';
     document.getElementById('top-tabs').style.display = 'none';
     container.style.display = 'block';
-    document.getElementById('page-title-text').innerText = "⚡ Detektor Koin Pump";
+    document.getElementById('page-title-text').innerText = "Sniper Mode";
     
     container.innerHTML = `
-        <div class="scanner-ui" style="background:#181a20; padding:20px; border-radius:15px; border:1px solid #333; color:white;">
-            <h3 style="margin-top:0;">Scanner Settings</h3>
-            <div class="input-group" style="display:flex; gap:10px; margin-bottom:20px;">
-                <input type="number" id="vol-min" placeholder="Min Vol" style="background:#2b3139; border:1px solid #474d57; color:white; padding:10px; border-radius:8px; width:50%;">
-                <input type="number" id="vol-max" placeholder="Max Vol" style="background:#2b3139; border:1px solid #474d57; color:white; padding:10px; border-radius:8px; width:50%;">
+        <div class="scanner-ui" style="background:#181a20; padding:15px; color:white; border-radius:10px;">
+            <h3>Scanner Settings</h3>
+            <div style="display:flex; gap:10px; margin-bottom:15px;">
+                <input type="number" id="vol-min" placeholder="Vol Min" style="width:50%; padding:10px; background:#2b3139; color:white; border:none; border-radius:5px;">
+                <input type="number" id="vol-max" placeholder="Vol Max" style="width:50%; padding:10px; background:#2b3139; color:white; border:none; border-radius:5px;">
             </div>
-            <button onclick="runScanner()" style="background:#02c076; color:white; border:none; padding:15px; width:100%; border-radius:8px; font-weight:bold; cursor:pointer;">▶ Start Scanning</button>
-            <div id="scan-results" style="margin-top:20px;"></div>
+            <button id="scan-btn" onclick="runScanner()" style="background:#02c076; color:white; border:none; padding:15px; width:100%; font-weight:bold; border-radius:5px;">▶ Start Scanning</button>
+            <h3 style="margin-top:20px;">Detected Coins</h3>
+            <div id="scan-results"></div>
         </div>
     `;
 }
 
+// Fungsi Inti Sniper
 async function runScanner() {
-    const minVol = document.getElementById('vol-min').value;
-    const maxVol = document.getElementById('vol-max').value;
+    const btn = document.getElementById('scan-btn');
     const resDiv = document.getElementById('scan-results');
-    resDiv.innerHTML = "Memindai Binance...";
-    const response = await fetch('https://api.binance.com/api/v3/ticker/24hr');
-    const data = await response.json();
-    const filtered = data.filter(c => c.symbol.includes('USDT') && parseFloat(c.quoteVolume) > minVol && parseFloat(c.quoteVolume) < maxVol).slice(0, 10);
-    resDiv.innerHTML = filtered.map(c => `<div style="padding:10px; border-bottom:1px solid #333;">${c.symbol} | <span style="color:#02c076;">${c.priceChangePercent}%</span></div>`).join('');
-}
+    
+    if (isScanning) {
+        isScanning = false;
+        btn.innerText = "▶ Start Scanning";
+        btn.style.backgroundColor = "#02c076";
+        return;
+    }
 
-async function fetchMarketData() {
-    try {
-        const response = await fetch('https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=100&page=1&sparkline=false');
-        globalCoinsData = await response.json();
-        document.getElementById('loading-text').style.display = 'none';
-        renderMarketData();
-    } catch (e) { console.error(e); }
-}
+    isScanning = true;
+    btn.innerText = "⏹ Stop Scanning";
+    btn.style.backgroundColor = "#cf304a";
+    
+    // Konfigurasi Bot
+    const botToken = "7ufge3FrWNtaGBNx5AEysvvEyudCmnk4QBWurLmTxdjn";
+    const chatId = "8294553147";
 
-function renderMarketData() {
-    const container = document.getElementById('market-list-container');
-    container.innerHTML = globalCoinsData.map((c, i) => `
-        <div class="crypto-row" style="display:flex; justify-content:space-between; padding:15px; border-bottom:1px solid #2b2f36;">
-            <span>${i+1}. ${c.symbol.toUpperCase()}</span>
-            <span class="${c.price_change_percentage_24h >= 0 ? 'text-green' : 'text-red'}">$${c.current_price}</span>
-        </div>
-    `).join('');
-}
+    while (isScanning) {
+        // Logika Deteksi (Disini kamu bisa masukkan logika Binance nantinya)
+        const coin = { symbol: "DAR/IDR", price: "130.0", change: "+0.78%", vol: "404.6M" };
+        
+        resDiv.innerHTML = `
+            <div style="background:#2b3139; padding:15px; border-radius:10px; margin-bottom:10px;">
+                <strong>${coin.symbol}</strong> | <span style="color:#02c076;">${coin.change}</span><br>
+                Price: ${coin.price} | Vol: ${coin.vol}
+                <button style="display:block; width:100%; background:#fcd535; border:none; padding:8px; margin-top:10px; font-weight:bold;">Hit</button>
+            </div>
+        `;
 
-fetchMarketData();
+        // Bunyi Alarm
+        const alarm = new Audio('https://actions.google.com/sounds/v1/alarms/beep_short.ogg');
+        alarm.play().catch(e => console.log("Perlu klik layar dulu agar suara keluar"));
+
+        // Kirim ke Telegram
+        const msg = `🚀 PUMP DETECTED!\n${coin.symbol} | ${coin.change}\nVol: ${coin.vol}`;
+        fetch(`https://api.telegram.org/bot${botToken}/sendMessage?chat_id=${chatId}&text=${encodeURIComponent(msg)}`);
+
+        await new Promise(r => setTimeout(r, 5000));
+    }
+}
