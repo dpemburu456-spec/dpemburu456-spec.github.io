@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sinyal Cuan - Crypto Pump Detector</title>
+    <title>Sinyal Cuan - Crypto Global Market</title>
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -11,7 +11,6 @@
             color: #eaecef;
             margin: 0;
             padding: 0;
-            text-align: center;
         }
         header {
             background-color: #181a20;
@@ -19,117 +18,139 @@
             border-bottom: 1px solid #2b2f36;
             display: flex;
             align-items: center;
-            justify-content: flex-start; /* Membuat konten rapat ke kiri */
+            justify-content: flex-start;
             position: sticky;
             top: 0;
             z-index: 100;
         }
-        /* Tombol Garis 3 */
         .menu-toggle {
             background: none;
             border: none;
             color: #eaecef;
             font-size: 24px;
             cursor: pointer;
-            margin-right: 20px; /* Jarak antara garis 3 dan logo */
+            margin-right: 20px;
             display: flex;
             align-items: center;
         }
-        /* Pengaturan Logo */
         .logo-container img {
-            height: 40px; /* Ukuran tinggi logo biar pas di header */
+            height: 40px;
             width: auto;
             display: block;
-        }
-        header h1 {
-            color: #00c076;
-            margin: 0;
-            font-size: 28px;
         }
         .container {
             max-width: 800px;
             margin: 0 auto;
-            padding: 40px 20px;
+            padding: 20px 15px;
+            text-align: center;
         }
-        .hero p {
-            font-size: 18px;
-            color: #848e9c;
-        }
-        .loading {
-            font-size: 18px;
-            color: #fcd535;
-            margin: 20px 0;
-        }
-        /* Gaya Kotak Sinyal */
-        .signal-card {
-            background-color: #181a20;
-            border: 1px solid #2b2f36;
-            border-radius: 8px;
-            padding: 20px;
-            margin: 20px 0;
+        .section-title {
             text-align: left;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
-        }
-        .signal-header {
+            font-size: 20px;
+            font-weight: bold;
+            margin: 20px 5px 15px 5px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            border-bottom: 1px solid #2b2f36;
-            padding-bottom: 10px;
         }
-        .coin-name {
-            font-size: 20px;
-            font-weight: bold;
-        }
-        .status-pump {
-            background-color: #00c076;
-            color: #0b0e11;
-            padding: 5px 10px;
-            border-radius: 4px;
-            font-weight: bold;
+        .section-title span {
             font-size: 14px;
+            color: #848e9c;
+            font-weight: normal;
         }
-        .signal-body {
-            margin-top: 15px;
+        .loading {
             font-size: 16px;
-            color: #b5b7bc;
+            color: #fcd535;
+            margin: 40px 0;
         }
-        .text-green {
-            color: #00c076;
+        
+        /* Tampilan Daftar Koin (Gaya Dompet Digital Premium) */
+        .crypto-list {
+            background-color: #181a20;
+            border: 1px solid #2b2f36;
+            border-radius: 12px;
+            padding: 5px 0;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+            margin-bottom: 30px;
+        }
+        .crypto-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 15px 20px;
+            border-bottom: 1px solid #2b2f36;
+            transition: background 0.2s;
+        }
+        .crypto-row:last-child {
+            border-bottom: none;
+        }
+        .crypto-row:hover {
+            background-color: #212630;
+        }
+        .coin-info-block {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        .coin-icon {
+            width: 32px;
+            height: 32px;
+            background-color: #2b3139;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             font-weight: bold;
+            font-size: 12px;
+            color: #fcd535;
         }
-        .btn-join {
-            display: inline-block;
-            background-color: #fcd535;
-            color: #0b0e11;
-            padding: 12px 30px;
-            border-radius: 4px;
-            text-decoration: none;
+        .coin-meta {
+            text-align: left;
+        }
+        .coin-symbol-text {
+            font-size: 16px;
             font-weight: bold;
-            margin-top: 30px;
-            transition: 0.3s;
+            color: #eaecef;
         }
-        .btn-join:hover {
-            background-color: #e2be2d;
+        .coin-pair-text {
+            font-size: 12px;
+            color: #848e9c;
+            margin-top: 2px;
         }
+        .price-block {
+            text-align: right;
+        }
+        .coin-price-text {
+            font-size: 16px;
+            font-weight: bold;
+            color: #eaecef;
+        }
+        .percent-text {
+            font-size: 13px;
+            font-weight: 500;
+            margin-top: 4px;
+        }
+        .text-green { color: #02c076; }
+        .text-red { color: #cf304a; }
+
         /* Gaya Menu Samping (Sidebar) */
         .sidebar {
             height: 100%;
-            width: 0; /* Mulai dengan tersembunyi */
+            width: 0;
             position: fixed;
             z-index: 200;
             top: 0;
             left: 0;
             background-color: #181a20;
             overflow-x: hidden;
-            transition: 0.3s; /* Efek geser halus */
+            transition: 0.3s;
             padding-top: 60px;
             border-right: 1px solid #2b2f36;
         }
         .sidebar a {
             padding: 15px 25px;
             text-decoration: none;
-            font-size: 18px;
+            font-size: 17px;
             color: #848e9c;
             display: block;
             transition: 0.2s;
@@ -149,7 +170,6 @@
             border: none;
             cursor: pointer;
         }
-        /* Lapisan Gelap saat Menu Terbuka */
         .overlay {
             display: none;
             position: fixed;
@@ -157,7 +177,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.5);
+            background: rgba(0, 0, 0, 0.6);
             z-index: 199;
         }
     </style>
@@ -166,41 +186,40 @@
 
     <div id="mySidebar" class="sidebar">
         <button class="close-btn" onclick="closeNav()">×</button>
-        <a href="#">🏠 Beranda</a>
+        <a href="#" onclick="showPage('global'); closeNav();">🏠 Pasar Global (Top 100)</a>
+        <a href="#" onclick="showPage('pump'); closeNav();">🚀 Sinyal Cuan (Top Pump)</a>
         <a href="https://t.me/trend_snap_helayo" target="_blank">💬 Grup Telegram</a>
-        <a href="#" onclick="alert('Fitur Premium bersambung, bos!')">💎 Langganan VIP</a>
-        <a href="#" onclick="alert('Sinyal Cuan Detector v1.0 - Real-time API')">ℹ️ Tentang Bot</a>
+        <a href="#" onclick="alert('Fitur VIP Premium bersambung ya, bosku!')">💎 Langganan VIP</a>
     </div>
     <div id="myOverlay" class="overlay" onclick="closeNav()"></div>
 
     <header>
         <button class="menu-toggle" onclick="openNav()">☰</button>
-        
         <div class="logo-container">
             <img src="logocryptosinyalcuan.png" alt="Sinyal Cuan Logo">
         </div>
     </header>
 
     <div class="container">
-        <div class="hero">
-            <h2>Pantau Sinyal Crypto Potensial Secara Real-Time</h2>
-            <p>Sistem otomatis mendeteksi koin di pasar spot Binance yang mengalami kenaikan harga tertinggi dalam 24 jam terakhir.</p>
+        <div class="section-title">
+            <span id="page-title-text">Earn Yield / Pasar Global</span>
+            <span id="update-timer">Membuka jaringan...</span>
         </div>
 
-        <div id="loading-text" class="loading">Memindai pergerakan pasar crypto...</div>
-        <div id="signal-container"></div>
+        <div id="loading-text" class="loading">Memuat data pasar crypto global...</div>
+        <div id="market-list-container" class="crypto-list"></div>
 
-        <a href="https://t.me/trend_snap_helayo" target="_blank" class="btn-join">Gabung Komunitas Sinyal Cuan</a>
-
-        <div style="margin-top: 50px; padding: 15px; border-top: 1px solid #2b2f36; text-align: justify; font-size: 13px; color: #848e9c; line-height: 1.6;">
-            <strong>⚠️ Peringatan Risiko:</strong> Perdagangan aset crypto memiliki tingkat risiko yang sangat tinggi. Sinyal yang disediakan oleh Sinyal Cuan Detector di website ini murni hasil pemindaian data statistik pasar secara real-time dari API publik, bukan merupakan saran finansial atau ajakan untuk membeli/menjual. Segala keputusan trading dan risiko kerugian keuangan adalah tanggung jawab Anda sepenuhnya.
+        <div style="margin-top: 30px; padding: 15px; border-top: 1px solid #2b2f36; text-align: justify; font-size: 12px; color: #848e9c; line-height: 1.6;">
+            <strong>⚠️ Peringatan Risiko:</strong> Perdagangan aset crypto memiliki tingkat risiko tinggi. Data di atas dimuat secara real-time langsung dari API publik bursa global untuk keperluan informasi, bukan merupakan anjuran finansial.
         </div>
     </div>
 
     <script>
-        // Fungsi untuk mengontrol Buka & Tutup Menu Samping
+        let currentView = 'global'; // Pilihan halaman: 'global' atau 'pump'
+        let fullMarketData = [];
+
         function openNav() {
-            document.getElementById("mySidebar").style.width = "250px";
+            document.getElementById("mySidebar").style.width = "260px";
             document.getElementById("myOverlay").style.display = "block";
         }
         function closeNav() {
@@ -208,63 +227,102 @@
             document.getElementById("myOverlay").style.display = "none";
         }
 
-        async function fetchPumpSignals() {
-            const container = document.getElementById('signal-container');
-            const loadingText = document.getElementById('loading-text');
-            
+        // Fungsi untuk mengubah tampilan halaman dari sidebar
+        function showPage(view) {
+            currentView = view;
+            const titleText = document.getElementById('page-title-text');
+            if (view === 'global') {
+                titleText.innerText = "Earn Yield / Pasar Global (Top 100)";
+            } else {
+                titleText.innerText = "🚀 Sinyal Cuan / Detektor Pump";
+            }
+            renderMarketData();
+        }
+
+        async function fetchMarketData() {
             try {
-                // Mengambil data harga 24 jam dari API Binance
                 const response = await fetch('https://api.binance.com/api/v3/ticker/24hr');
                 const data = await response.json();
                 
-                // Filter hanya koin berpasangan USDT dan sortir berdasarkan kenaikan persen tertinggi
-                const usdtPairs = data.filter(ticker => ticker.symbol.endsWith('USDT'));
-                usdtPairs.sort((a, b) => parseFloat(b.priceChangePercent) - parseFloat(a.priceChangePercent));
+                // Ambil pasangan koin USDT utama
+                fullMarketData = data.filter(ticker => ticker.symbol.endsWith('USDT'));
                 
-                // Ambil 3 koin yang sedang naik paling tinggi (Top Pump)
-                const topPumpCoins = usdtPairs.slice(0, 3);
+                document.getElementById('loading-text').style.display = 'none';
+                document.getElementById('update-timer').innerText = 'Live otomatis';
                 
-                // Kosongkan loading text
-                loadingText.style.display = 'none';
-                container.innerHTML = '';
-                
-                // Tampilkan ke website
-                topPumpCoins.forEach(coin => {
-                    const cleanName = coin.symbol.replace('USDT', ' / USDT');
-                    const percent = parseFloat(coin.priceChangePercent).toFixed(2);
-                    const lastPrice = parseFloat(coin.lastPrice);
-                    
-                    // Format tampilan harga agar rapi
-                    const formattedPrice = lastPrice > 1 ? lastPrice.toLocaleString('en-US') : lastPrice;
-
-                    const cardHTML = `
-                        <div class="signal-card">
-                            <div class="signal-header">
-                                <span class="coin-name">🚀 ${cleanName}</span>
-                                <span class="status-pump">PUMP DETECTED</span>
-                            </div>
-                            <div class="signal-body">
-                                <p><strong>Harga Saat Ini:</strong> $${formattedPrice}</p>
-                                <p><strong>Lonjakan 24 Jam:</strong> <span class="text-green">+${percent}%</span></p>
-                                <p><strong>Rekomendasi:</strong> Momentum Bullish Kuat. Pantau indikator RSI dan Volume sebelum masuk ke grup komunitas untuk konfirmasi.</p>
-                            </div>
-                        </div>
-                    `;
-
-                    container.innerHTML += cardHTML;
-                });
-                
+                renderMarketData();
             } catch (error) {
-                loadingText.innerText = "Gagal memuat data market. Silakan muat ulang halaman.";
+                document.getElementById('loading-text').innerText = "Gagal memuat data. Silakan muat ulang.";
                 console.error(error);
             }
         }
 
-        // Jalankan fungsi otomatis saat halaman dibuka
-        fetchPumpSignals();
-        
-        // Perbarui data otomatis setiap 30 detik tanpa perlu refresh halaman
-        setInterval(fetchPumpSignals, 30000);
+        function renderMarketData() {
+            const container = document.getElementById('market-list-container');
+            container.innerHTML = '';
+            
+            let targetCoins = [];
+            
+            if (currentView === 'global') {
+                // Urutkan berdasarkan volume perdagangan atau kapitalisasi acuan (diambil top 100 secara global)
+                // Menggunakan kombinasi volume bawaan API untuk list utama koin populer
+                let sortedByVolume = [...fullMarketData].sort((a, b) => parseFloat(b.volume) - parseFloat(a.volume));
+                targetCoins = sortedByVolume.slice(0, 100);
+            } else {
+                // Urutkan berdasarkan lonjakan persentase tertinggi (Fitur Sinyal Cuan Pump lama)
+                let sortedByPump = [...fullMarketData].sort((a, b) => parseFloat(b.priceChangePercent) - parseFloat(a.priceChangePercent));
+                targetCoins = sortedByPump.slice(0, 10); // Tampilkan top 10 sinyal pump di sidebar menu
+            }
+
+            if (targetCoins.length === 0) return;
+
+            targetCoins.forEach(coin => {
+                const rawSymbol = coin.symbol.replace('USDT', '');
+                
+                // Filter koin aneh berlabel token leverage/bukan utama agar daftar terlihat bersih bersih
+                if(rawSymbol.endsWith('UP') || rawSymbol.endsWith('DOWN') || rawSymbol.length > 6) return;
+
+                const percent = parseFloat(coin.priceChangePercent).toFixed(2);
+                const lastPrice = parseFloat(coin.lastPrice);
+                
+                // Format tampilan nominal harga
+                let formattedPrice = lastPrice;
+                if (lastPrice >= 1) {
+                    formattedPrice = lastPrice.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+                } else {
+                    formattedPrice = lastPrice.toFixed(4);
+                }
+
+                const isPositive = percent >= 0;
+                const percentClass = isPositive ? 'text-green' : 'text-red';
+                const percentSign = isPositive ? '+' : '';
+
+                // Ambil huruf pertama nama koin sebagai placeholder ikon logo elegan
+                const firstLetter = rawSymbol.charAt(0);
+
+                const rowHTML = `
+                    <div class="crypto-row">
+                        <div class="coin-info-block">
+                            <div class="coin-icon">${firstLetter}</div>
+                            <div class="coin-meta">
+                                <div class="coin-symbol-text">${rawSymbol}</div>
+                                <div class="coin-pair-text">24h Vol MC</div>
+                            </div>
+                        </div>
+                        <div class="price-block">
+                            <div class="coin-price-text">$${formattedPrice}</div>
+                            <div class="percent-text ${percentClass}">${percentSign}${percent}%</div>
+                        </div>
+                    </div>
+                `;
+                container.innerHTML += rowHTML;
+            });
+        }
+
+        // Jalankan sistem real-time otomatis
+        fetchMarketData();
+        setInterval(fetchMarketData, 20000); // Sinkronisasi otomatis tiap 20 detik
     </script>
 </body>
 </html>
+
