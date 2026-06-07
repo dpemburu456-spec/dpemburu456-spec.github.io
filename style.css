@@ -215,3 +215,34 @@ header {
     background: rgba(0, 0, 0, 0.6);
     z-index: 199;
 }
+.scanner-ui {
+    background: #181a20;
+    padding: 20px;
+    border-radius: 15px;
+    border: 1px solid #333;
+    color: white;
+}
+.input-group {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+}
+.input-field {
+    background: #2b3139;
+    border: 1px solid #474d57;
+    color: white;
+    padding: 10px;
+    border-radius: 8px;
+    width: 80px;
+}
+.btn-scan {
+    background: #02c076;
+    color: white;
+    border: none;
+    padding: 15px;
+    width: 100%;
+    border-radius: 8px;
+    font-weight: bold;
+    cursor: pointer;
+}
