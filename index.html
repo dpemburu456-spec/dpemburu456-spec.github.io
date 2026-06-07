@@ -3,8 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>Sinyal Cuan - Crypto Global Market</title>
-    <!-- CSS akan menyusul -->
+    <title>Sinyal Cuan - Sniper Scanner & Pump Detector</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -13,8 +12,9 @@
     <div id="mySidebar" class="sidebar">
         <button class="close-btn" onclick="closeNav()">×</button>
         <a href="#" onclick="switchTab('elit'); closeNav();">🏠 Beranda Pasar</a>
+        <a href="#" onclick="switchTab('sniper'); closeNav();">🎯 Sniper Scanner</a>
         <a href="#" onclick="showCustomScanner(); closeNav();">⚡ Detektor Koin Pump</a>
-        <a href="#" onclick="switchTab('scanner'); closeNav();">🔍 Scanner Binance</a>
+        <a href="#" onclick="showBinanceScanner(); closeNav();">🔍 Scanner Binance</a>
         <a href="#" onclick="showPumpPage(); closeNav();">🚀 Top Pump</a>
         <a href="https://t.me/trend_snap_helayo" target="_blank">💬 Grup Telegram</a>
         <a href="#" onclick="alert('Fitur VIP Premium segera hadir, bosku!')">💎 Langganan VIP</a>
@@ -33,14 +33,15 @@
 
     <!-- MAIN CONTENT -->
     <div class="container">
-        <!-- Tab Navigator -->
+        <!-- Tab Navigator (tambah Sniper) -->
         <div id="top-tabs" class="tab-container">
             <button id="tab-elit" class="tab-btn active" onclick="switchTab('elit')">👑 Global Top 100</button>
             <button id="tab-populer" class="tab-btn" onclick="switchTab('populer')">🔥 Kenaikan Tertinggi</button>
+            <button id="tab-sniper" class="tab-btn" onclick="switchTab('sniper')">🎯 Sniper Scanner</button>
         </div>
 
         <div class="section-title">
-            <span id="page-title-text">Pasar Global / Global Top 100</span>
+            <span id="page-title-text">Pasar Global / Kapitalisasi Terbesar</span>
             <span id="update-timer">Memuat data...</span>
         </div>
 
@@ -49,6 +50,7 @@
         <div id="main-content-wrapper">
             <div id="market-list-container" class="crypto-list"></div>
             <div id="scanner-container" class="scanner-block" style="display: none;"></div>
+            <div id="sniper-container" class="scanner-block" style="display: none;"></div>
         </div>
 
         <div style="margin-top: 30px; padding: 15px; border-top: 1px solid #2b2f36; text-align: justify; font-size: 12px; color: #848e9c; line-height: 1.6;">
@@ -56,7 +58,6 @@
         </div>
     </div>
 
-    <!-- JavaScript akan menyusul -->
     <script src="script.js"></script>
 </body>
-</html>
+                </html>
