@@ -147,19 +147,20 @@
                     // Format tampilan harga agar rapi
                     const formattedPrice = lastPrice > 1 ? lastPrice.toLocaleString('en-US') : lastPrice;
 
-                    const cardHTML = `
-                        <div class="signal-card">
-                            <div class="signal-header">
-                                <span class="coin-name">🚀 ${cleanName}</span>
-                                <span class="status-pump">PUMP DETECTED</span>
-                            </div>
-                            <div class="signal-body">
-                                <p><strong>Harga Saat Ini:</strong> $${formattedPrice}</p>
-                                <p><strong>Lonjakan 24 Jam:</strong> <span class="text-green">+${percent}%</span></p>
-                                <p><strong>Rekomendasi:</strong> Momentum Bullish Kuat. Pantau indikator RSI dan Volume sebelum masuk ke grup komunitas untuk konfirmasi.</p>
-                            </div>
+                                    const cardHTML = `
+                    <div class="signal-card">
+                        <div class="signal-header">
+                            <span class="coin-name">🚀 ${cleanName}</span>
+                            <span class="status-pump">PUMP DETECTED</span>
                         </div>
-                    `;
+                        <div class="signal-body">
+                            <p><strong>Harga Saat Ini:</strong> $${formattedPrice}</p>
+                            <p><strong>Lonjakan 24 Jam:</strong> <span class="text-green">+${percent}%</span></p>
+                            <p><strong>Rekomendasi:</strong> Momentum Bullish Kuat. Pantau indikator RSI dan Volume sebelum masuk ke grup komunitas untuk konfirmasi.</p>
+                        </div>
+                    </div>
+                `;
+
                     container.innerHTML += cardHTML;
                 });
                 
