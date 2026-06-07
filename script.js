@@ -58,23 +58,40 @@ function showPumpPage() {
 // FUNGSI LOAD SCREENER JALUR TRADINGVIEW BINANCE MARKET
 function loadTradingViewScanner() {
     const container = document.getElementById('scanner-container');
-    if (tradingViewWidgetLoaded) return; // Mencegah load ganda bikin lambat
+    if (tradingViewWidgetLoaded) return;
 
-    container.innerHTML = `
-        <div class="tradingview-widget-container" style="height:550px;width:100%;">
-            <div id="tradingview_screener"></div>
-            <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-screener.js" async>
-            {
-                "width": "100%",
-                "height": "550",
-                "defaultColumn": "overview",
-                "screener_type": "crypto_mkt",
-                "displayCurrency": "USD",
-                "colorTheme": "dark",
-                "locale": "id",
-                "market": "crypto",
-                "symbols": {
-                    "providers": ["BINANCE"]
+    container.innerHTML = '';
+    
+    // Membuat elemen penampung widget asli
+    const widgetWrapper = document.createElement('div');
+    widgetWrapper.className = 'tradingview-widget-container';
+    widgetWrapper.style.height = '550px';
+    widgetWrapper.style.width = '100%';
+    
+    const widgetContainer = document.createElement('div');
+    widgetContainer.className = 'tradingview-widget-container__widget';
+    widgetWrapper.appendChild(widgetContainer);
+    container.appendChild(widgetWrapper);
+
+    // Injeksi Script Resmi TradingView dengan parameter yang fix & stabil untuk mobile
+    const script = document.createElement('script');
+    script.type = 'text/javascript';
+    script.src = 'https://s3.tradingview.com/external-embedding/embed-widget-screener.js';
+    script.async = true;
+    script.innerHTML = JSON.stringify({
+        "width": "100%",
+        "height": "100%",
+        "defaultColumn": "overview",
+        "screener_type": "crypto_mkt",
+        "displayCurrency": "USD",
+        "colorTheme": "dark",
+        "locale": "id",
+        "market": "crypto",
+        "enableScrolling": true
+    });
+    
+    widgetWrapper.appendChild(script);
+    tradingViewWidgetLoaded = true;
                 }
             }
             </script>
