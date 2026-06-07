@@ -44,9 +44,36 @@
             padding: 20px 15px;
             text-align: center;
         }
+        
+        /* Gaya Menu Tab di Atas Beranda */
+        .tab-container {
+            display: flex;
+            background-color: #181a20;
+            border: 1px solid #2b2f36;
+            border-radius: 8px;
+            margin: 15px 0;
+            padding: 4px;
+        }
+        .tab-btn {
+            flex: 1;
+            background: none;
+            border: none;
+            color: #848e9c;
+            padding: 10px;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            border-radius: 6px;
+            transition: 0.2s;
+        }
+        .tab-btn.active {
+            background-color: #2b3139;
+            color: #fcd535;
+        }
+
         .section-title {
             text-align: left;
-            font-size: 20px;
+            font-size: 18px;
             font-weight: bold;
             margin: 20px 5px 15px 5px;
             display: flex;
@@ -54,7 +81,7 @@
             align-items: center;
         }
         .section-title span {
-            font-size: 14px;
+            font-size: 13px;
             color: #848e9c;
             font-weight: normal;
         }
@@ -64,7 +91,7 @@
             margin: 40px 0;
         }
         
-        /* Tampilan Daftar Koin (Gaya Dompet Digital Premium) */
+        /* Tampilan Daftar Koin */
         .crypto-list {
             background-color: #181a20;
             border: 1px solid #2b2f36;
@@ -186,8 +213,8 @@
 
     <div id="mySidebar" class="sidebar">
         <button class="close-btn" onclick="closeNav()">×</button>
-        <a href="#" onclick="showPage('global'); closeNav();">🏠 Pasar Global (Top 100)</a>
-        <a href="#" onclick="showPage('pump'); closeNav();">🚀 Sinyal Cuan (Top Pump)</a>
+        <a href="#" onclick="switchTab('elit'); closeNav();">🏠 Beranda Pasar</a>
+        <a href="#" onclick="showPumpPage(); closeNav();">🚀 Sinyal Cuan (Top Pump)</a>
         <a href="https://t.me/trend_snap_helayo" target="_blank">💬 Grup Telegram</a>
         <a href="#" onclick="alert('Fitur VIP Premium bersambung ya, bosku!')">💎 Langganan VIP</a>
     </div>
@@ -201,22 +228,36 @@
     </header>
 
     <div class="container">
+        
+        <div id="top-tabs" class="tab-container">
+            <button id="tab-elit" class="tab-btn active" onclick="switchTab('elit')">👑 Elit Global</button>
+            <button id="tab-populer" class="tab-btn" onclick="switchTab('populer')">🔥 Volume Terbanyak</button>
+        </div>
+
         <div class="section-title">
-            <span id="page-title-text">Earn Yield / Pasar Global</span>
+            <span id="page-title-text">Pasar Global / Elit Global</span>
             <span id="update-timer">Membuka jaringan...</span>
         </div>
 
-        <div id="loading-text" class="loading">Memuat data pasar crypto global...</div>
+        <div id="loading-text" class="loading">Memuat data market real-time...</div>
         <div id="market-list-container" class="crypto-list"></div>
 
         <div style="margin-top: 30px; padding: 15px; border-top: 1px solid #2b2f36; text-align: justify; font-size: 12px; color: #848e9c; line-height: 1.6;">
-            <strong>⚠️ Peringatan Risiko:</strong> Perdagangan aset crypto memiliki tingkat risiko tinggi. Data di atas dimuat secara real-time langsung dari API publik bursa global untuk keperluan informasi, bukan merupakan anjuran finansial.
+            <strong>⚠️ Peringatan Risiko:</strong> Perdagangan aset crypto memiliki tingkat risiko tinggi. Data di atas dimuat secara real-time langsung dari API publik bursa global untuk keperluan informasi.
         </div>
     </div>
 
     <script>
-        let currentView = 'global'; // Pilihan halaman: 'global' atau 'pump'
+        let currentView = 'elit'; // Pilihan: 'elit', 'populer', atau 'pump'
         let fullMarketData = [];
+
+        // Kunci Daftar Koin Elit Global Utama Berdasarkan Urutan Market Cap Asli
+        const topElitCoins = [
+            'BTC', 'ETH', 'BNB', 'SOL', 'XRP', 
+            'ADA', 'DOGE', 'AVAX', 'SHIB', 'DOT', 
+            'LINK', 'TRX', 'MATIC', 'NEAR', 'UNI', 
+            'LTC', 'APT', 'ATOM', 'ETC', 'XLM'
+        ];
 
         function openNav() {
             document.getElementById("mySidebar").style.width = "260px";
@@ -227,15 +268,32 @@
             document.getElementById("myOverlay").style.display = "none";
         }
 
-        // Fungsi untuk mengubah tampilan halaman dari sidebar
-        function showPage(view) {
-            currentView = view;
-            const titleText = document.getElementById('page-title-text');
-            if (view === 'global') {
-                titleText.innerText = "Earn Yield / Pasar Global (Top 100)";
+        // Fungsi ketika tab atas diklik
+        function switchTab(tabType) {
+            currentView = tabType;
+            
+            // Munculkan kembali bar tab jika sempat disembunyikan di menu pump
+            document.getElementById('top-tabs').style.display = 'flex';
+
+            // Ganti warna tombol aktif
+            document.getElementById('tab-elit').classList.remove('active');
+            document.getElementById('tab-populer').classList.remove('active');
+            
+            if (tabType === 'elit') {
+                document.getElementById('tab-elit').classList.add('active');
+                document.getElementById('page-title-text').innerText = "Pasar Global / Elit Global";
             } else {
-                titleText.innerText = "🚀 Sinyal Cuan / Detektor Pump";
+                document.getElementById('tab-populer').classList.add('active');
+                document.getElementById('page-title-text').innerText = "Pasar Global / Volume Terbanyak";
             }
+            renderMarketData();
+        }
+
+        // Fungsi khusus membuka menu pump dari sidebar
+        function showPumpPage() {
+            currentView = 'pump';
+            document.getElementById('top-tabs').style.display = 'none'; // Sembunyikan tab atas
+            document.getElementById('page-title-text').innerText = "🚀 Sinyal Cuan / Detektor Pump";
             renderMarketData();
         }
 
@@ -244,8 +302,15 @@
                 const response = await fetch('https://api.binance.com/api/v3/ticker/24hr');
                 const data = await response.json();
                 
-                // Ambil pasangan koin USDT utama
-                fullMarketData = data.filter(ticker => ticker.symbol.endsWith('USDT'));
+                // Filter koin pasangan USDT murni
+                fullMarketData = data.filter(ticker => {
+                    const symbol = ticker.symbol;
+                    return symbol.endsWith('USDT') && 
+                           !symbol.endsWith('UPUSDT') && 
+                           !symbol.endsWith('DOWNUSDT') && 
+                           !symbol.startsWith('USDC') &&
+                           !symbol.startsWith('FDUSD');
+                });
                 
                 document.getElementById('loading-text').style.display = 'none';
                 document.getElementById('update-timer').innerText = 'Live otomatis';
@@ -263,29 +328,29 @@
             
             let targetCoins = [];
             
-            if (currentView === 'global') {
-                // Urutkan berdasarkan volume perdagangan atau kapitalisasi acuan (diambil top 100 secara global)
-                // Menggunakan kombinasi volume bawaan API untuk list utama koin populer
-                let sortedByVolume = [...fullMarketData].sort((a, b) => parseFloat(b.volume) - parseFloat(a.volume));
-                targetCoins = sortedByVolume.slice(0, 100);
+            if (currentView === 'elit') {
+                // TAB 1: Ikuti susunan koin fundamental elit global asli
+                topElitCoins.forEach(symbol => {
+                    const found = fullMarketData.find(ticker => ticker.symbol === (symbol + 'USDT'));
+                    if (found) targetCoins.push(found);
+                });
+            } else if (currentView === 'populer') {
+                // TAB 2: Urutkan otomatis berdasarkan sirkulasi dollar value terbanyak di pasar
+                let sortedByRealVolume = [...fullMarketData].sort((a, b) => parseFloat(b.quoteVolume) - parseFloat(a.quoteVolume));
+                targetCoins = sortedByRealVolume.slice(0, 50);
             } else {
-                // Urutkan berdasarkan lonjakan persentase tertinggi (Fitur Sinyal Cuan Pump lama)
+                // HALAMAN PUMP (DARI SIDEBAR): Cari 10 koin yang persentase kenaikannya paling tinggi hari ini
                 let sortedByPump = [...fullMarketData].sort((a, b) => parseFloat(b.priceChangePercent) - parseFloat(a.priceChangePercent));
-                targetCoins = sortedByPump.slice(0, 10); // Tampilkan top 10 sinyal pump di sidebar menu
+                targetCoins = sortedByPump.slice(0, 10);
             }
 
             if (targetCoins.length === 0) return;
 
             targetCoins.forEach(coin => {
                 const rawSymbol = coin.symbol.replace('USDT', '');
-                
-                // Filter koin aneh berlabel token leverage/bukan utama agar daftar terlihat bersih bersih
-                if(rawSymbol.endsWith('UP') || rawSymbol.endsWith('DOWN') || rawSymbol.length > 6) return;
-
                 const percent = parseFloat(coin.priceChangePercent).toFixed(2);
                 const lastPrice = parseFloat(coin.lastPrice);
                 
-                // Format tampilan nominal harga
                 let formattedPrice = lastPrice;
                 if (lastPrice >= 1) {
                     formattedPrice = lastPrice.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
@@ -296,8 +361,6 @@
                 const isPositive = percent >= 0;
                 const percentClass = isPositive ? 'text-green' : 'text-red';
                 const percentSign = isPositive ? '+' : '';
-
-                // Ambil huruf pertama nama koin sebagai placeholder ikon logo elegan
                 const firstLetter = rawSymbol.charAt(0);
 
                 const rowHTML = `
@@ -319,10 +382,6 @@
             });
         }
 
-        // Jalankan sistem real-time otomatis
         fetchMarketData();
-        setInterval(fetchMarketData, 20000); // Sinkronisasi otomatis tiap 20 detik
+        setInterval(fetchMarketData, 20000); 
     </script>
-</body>
-</html>
-
