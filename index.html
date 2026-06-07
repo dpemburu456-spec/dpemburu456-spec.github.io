@@ -13,7 +13,7 @@
             padding: 0;
             text-align: center;
         }
-                header {
+        header {
             background-color: #181a20;
             padding: 15px 20px;
             border-bottom: 1px solid #2b2f36;
@@ -41,7 +41,6 @@
             width: auto;
             display: block;
         }
-
         header h1 {
             color: #00c076;
             margin: 0;
@@ -113,7 +112,7 @@
         .btn-join:hover {
             background-color: #e2be2d;
         }
-                /* Gaya Menu Samping (Sidebar) */
+        /* Gaya Menu Samping (Sidebar) */
         .sidebar {
             height: 100%;
             width: 0; /* Mulai dengan tersembunyi */
@@ -161,13 +160,11 @@
             background: rgba(0, 0, 0, 0.5);
             z-index: 199;
         }
-
     </style>
 </head>
 <body>
 
-        <header>
-                <div id="mySidebar" class="sidebar">
+    <div id="mySidebar" class="sidebar">
         <button class="close-btn" onclick="closeNav()">×</button>
         <a href="#">🏠 Beranda</a>
         <a href="https://t.me/trend_snap_helayo" target="_blank">💬 Grup Telegram</a>
@@ -176,16 +173,12 @@
     </div>
     <div id="myOverlay" class="overlay" onclick="closeNav()"></div>
 
-        <!-- Tombol Garis 3 (Hamburger Menu) -->
-        <button class="menu-toggle" onclick="alert('Menu dalam pengembangan, bosku!')">☰</button>
+    <header>
+        <button class="menu-toggle" onclick="openNav()">☰</button>
         
-        <!-- Logo Website -->
         <div class="logo-container">
-            <!-- Pastikan nama file gambar logo di GitHub sesuai (contoh: logo.png) -->
             <img src="logocryptosinyalcuan.png" alt="Sinyal Cuan Logo">
         </div>
-    </header>
-
     </header>
 
     <div class="container">
@@ -194,21 +187,27 @@
             <p>Sistem otomatis mendeteksi koin di pasar spot Binance yang mengalami kenaikan harga tertinggi dalam 24 jam terakhir.</p>
         </div>
 
-        <!-- Tempat Kotak Sinyal Otomatis Muncul -->
         <div id="loading-text" class="loading">Memindai pergerakan pasar crypto...</div>
         <div id="signal-container"></div>
 
-        <!-- Tombol Komunitas (Ganti tanda # dengan link Telegram kamu) -->
         <a href="https://t.me/trend_snap_helayo" target="_blank" class="btn-join">Gabung Komunitas Sinyal Cuan</a>
 
-        <!-- Teks Disclaimer -->
         <div style="margin-top: 50px; padding: 15px; border-top: 1px solid #2b2f36; text-align: justify; font-size: 13px; color: #848e9c; line-height: 1.6;">
             <strong>⚠️ Peringatan Risiko:</strong> Perdagangan aset crypto memiliki tingkat risiko yang sangat tinggi. Sinyal yang disediakan oleh Sinyal Cuan Detector di website ini murni hasil pemindaian data statistik pasar secara real-time dari API publik, bukan merupakan saran finansial atau ajakan untuk membeli/menjual. Segala keputusan trading dan risiko kerugian keuangan adalah tanggung jawab Anda sepenuhnya.
         </div>
     </div>
 
-    <!-- LOGIKA OTOMATIS JAVASCRIPT -->
     <script>
+        // Fungsi untuk mengontrol Buka & Tutup Menu Samping
+        function openNav() {
+            document.getElementById("mySidebar").style.width = "250px";
+            document.getElementById("myOverlay").style.display = "block";
+        }
+        function closeNav() {
+            document.getElementById("mySidebar").style.width = "0";
+            document.getElementById("myOverlay").style.display = "none";
+        }
+
         async function fetchPumpSignals() {
             const container = document.getElementById('signal-container');
             const loadingText = document.getElementById('loading-text');
@@ -238,19 +237,19 @@
                     // Format tampilan harga agar rapi
                     const formattedPrice = lastPrice > 1 ? lastPrice.toLocaleString('en-US') : lastPrice;
 
-                                    const cardHTML = `
-                    <div class="signal-card">
-                        <div class="signal-header">
-                            <span class="coin-name">🚀 ${cleanName}</span>
-                            <span class="status-pump">PUMP DETECTED</span>
+                    const cardHTML = `
+                        <div class="signal-card">
+                            <div class="signal-header">
+                                <span class="coin-name">🚀 ${cleanName}</span>
+                                <span class="status-pump">PUMP DETECTED</span>
+                            </div>
+                            <div class="signal-body">
+                                <p><strong>Harga Saat Ini:</strong> $${formattedPrice}</p>
+                                <p><strong>Lonjakan 24 Jam:</strong> <span class="text-green">+${percent}%</span></p>
+                                <p><strong>Rekomendasi:</strong> Momentum Bullish Kuat. Pantau indikator RSI dan Volume sebelum masuk ke grup komunitas untuk konfirmasi.</p>
+                            </div>
                         </div>
-                        <div class="signal-body">
-                            <p><strong>Harga Saat Ini:</strong> $${formattedPrice}</p>
-                            <p><strong>Lonjakan 24 Jam:</strong> <span class="text-green">+${percent}%</span></p>
-                            <p><strong>Rekomendasi:</strong> Momentum Bullish Kuat. Pantau indikator RSI dan Volume sebelum masuk ke grup komunitas untuk konfirmasi.</p>
-                        </div>
-                    </div>
-                `;
+                    `;
 
                     container.innerHTML += cardHTML;
                 });
