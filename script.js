@@ -1,6 +1,5 @@
 let currentView = 'elit'; 
 let globalCoinsData = [];
-let tradingViewWidgetLoaded = false;
 
 function openNav() {
     document.getElementById("mySidebar").style.width = "260px";
@@ -20,14 +19,12 @@ function switchTab(tabType) {
     const titleText = document.getElementById('page-title-text');
 
     if (tabType === 'scanner') {
-        // TAMPILKAN HALAMAN SCANNER BINANCE
         tabs.style.display = 'none';
         marketContainer.style.display = 'none';
         scannerContainer.style.display = 'block';
         titleText.innerText = "🔍 Scanner Pasar Binance (Teknikal)";
         loadTradingViewScanner();
     } else {
-        // TAMPILKAN HALAMAN UTAMA COINGECKO
         tabs.style.display = 'flex';
         marketContainer.style.display = 'block';
         scannerContainer.style.display = 'none';
@@ -55,57 +52,28 @@ function showPumpPage() {
     renderMarketData();
 }
 
-// FUNGSI LOAD SCREENER JALUR TRADINGVIEW BINANCE MARKET
 function loadTradingViewScanner() {
     const container = document.getElementById('scanner-container');
-    if (tradingViewWidgetLoaded) return;
+    // Bersihkan isi container terlebih dahulu agar tidak menumpuk eror
+    container.innerHTML = ''; 
 
-    container.innerHTML = '';
-    
-    // Membuat elemen penampung widget asli
-    const widgetWrapper = document.createElement('div');
-    widgetWrapper.className = 'tradingview-widget-container';
-    widgetWrapper.style.height = '550px';
-    widgetWrapper.style.width = '100%';
-    
-    const widgetContainer = document.createElement('div');
-    widgetContainer.className = 'tradingview-widget-container__widget';
-    widgetWrapper.appendChild(widgetContainer);
-    container.appendChild(widgetWrapper);
+    const widgetDiv = document.createElement('div');
+    widgetDiv.className = 'tradingview-widget-container';
+    widgetDiv.style.width = '100%';
+    widgetDiv.style.height = '500px';
 
-    // Injeksi Script Resmi TradingView dengan parameter yang fix & stabil untuk mobile
+    const innerWidget = document.createElement('div');
+    innerWidget.className = 'tradingview-widget-container__widget';
+    widgetDiv.appendChild(innerWidget);
+    container.appendChild(widgetDiv);
+
     const script = document.createElement('script');
     script.type = 'text/javascript';
     script.src = 'https://s3.tradingview.com/external-embedding/embed-widget-screener.js';
     script.async = true;
-    script.innerHTML = JSON.stringify({
+    script.text = JSON.stringify({
         "width": "100%",
-        "height": "100%",
-        "defaultColumn": "overview",
-        "screener_type": "crypto_mkt",
-        "displayCurrency": "USD",
-        "colorTheme": "dark",
-        "locale": "id",
-        "market": "crypto",
-        "enableScrolling": true
-    });
-    
-    widgetWrapper.appendChild(script);
-    tradingViewWidgetLoaded = true;
-                }
-            }
-            </script>
-        </div>
-    `;
-    
-    // Trik memaksa injeksi script TradingView agar aktif di browser mobile
-    const script = document.createElement('script');
-    script.type = 'text/javascript';
-    script.src = 'https://s3.tradingview.com/external-embedding/embed-widget-screener.js';
-    script.async = true;
-    script.innerHTML = JSON.stringify({
-        "width": "100%",
-        "height": "550",
+        "height": "500",
         "defaultColumn": "overview",
         "screener_type": "crypto_mkt",
         "displayCurrency": "USD",
@@ -113,8 +81,7 @@ function loadTradingViewScanner() {
         "locale": "id",
         "market": "crypto"
     });
-    container.appendChild(script);
-    tradingViewWidgetLoaded = true;
+    widgetDiv.appendChild(script);
 }
 
 async function fetchMarketData() {
@@ -192,4 +159,4 @@ function renderMarketData() {
 }
 
 fetchMarketData();
-setInterval(fetchMarketData, 60000); 
+setInterval(fetchMarketData, 60000);
