@@ -16,7 +16,7 @@ let scanIntervalSec = 2.5;
 let pumpThresholdPercent = 3; // minimal kenaikan dalam interval terakhir
 
 // Telegram config (isi dengan milik Anda)
-const TELEGRAM_BOT_TOKEN = "7ufge3FrWNtaGBNx5AEysvvEyudCmnk4QBWurLmTxdjn";
+const TELEGRAM_BOT_TOKEN = "8548300908:AAGMsHeWFtCghVS4N1Vabl4Vb0ay6PCwH94";
 const TELEGRAM_CHAT_ID = "8294553147";
 
 // DOM Elements
