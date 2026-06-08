@@ -2,20 +2,20 @@
 let globalMarketData = [];
 let lastUpdateTime = null;
 let autoRefreshInterval = null;
-let currentDisplayMode = 'elit'; // 'elit', 'populer', 'sniper'
+let currentDisplayMode = 'elit';
 let isRefreshing = false;
 
 // Sniper Scanner variables
 let sniperScanning = false;
 let sniperInterval = null;
-let priceHistory = {}; // menyimpan array harga sebelumnya per coin
+let priceHistory = {};
 let historyLength = 4;
 let volumeMin = 0;
-let volumeMax = 900000000; // 900M
+let volumeMax = 900000000;
 let scanIntervalSec = 2.5;
-let pumpThresholdPercent = 3; // minimal kenaikan dalam interval terakhir
+let pumpThresholdPercent = 3;
 
-// Telegram config (isi dengan milik Anda)
+// Telegram config (SUDAH DIISI DENGAN TOKEN ANDA)
 const TELEGRAM_BOT_TOKEN = "8548300908:AAGMsHeWFtCghVS4N1Vabl4Vb0ay6PCwH94";
 const TELEGRAM_CHAT_ID = "8294553147";
 
@@ -128,7 +128,6 @@ function renderMarketList(mode) {
 // ======================== SWITCH TAB ========================
 window.switchTab = async function(tabId) {
     window.closeNav();
-    // Sembunyikan semua container
     marketListContainer.style.display = 'none';
     scannerContainer.style.display = 'none';
     sniperContainer.style.display = 'none';
@@ -153,10 +152,103 @@ window.switchTab = async function(tabId) {
         tabPopulerBtn.classList.remove('active');
         sniperContainer.style.display = 'block';
         await buildSniperUI();
-    } else {
-        // fallback
-        marketListContainer.style.display = 'block';
+    } else if (tabId === 'news') {
+        showTrendingNews();
     }
+};
+
+// ======================== TRENDING NEWS (GANTI BINANCE SCANNER) ========================
+window.showTrendingNews = async function() {
+    window.closeNav();
+    marketListContainer.style.display = 'none';
+    scannerContainer.style.display = 'block';
+    sniperContainer.style.display = 'none';
+    
+    scannerContainer.innerHTML = `
+        <div class="scanner-ui">
+            <h3 style="margin-top:0;">📰 Berita Crypto Trending</h3>
+            <p style="font-size:13px; color:#fcd535;">Update berita terbaru dari Cointelegraph</p>
+            <button id="refreshNewsBtn" style="background:#2b3139; border:none; color:#fcd535; padding:5px 12px; border-radius:6px; margin-bottom:15px; cursor:pointer;">⟳ Refresh</button>
+            <div id="newsList" style="text-align:left; max-height:550px; overflow-y:auto;">
+                <div class="loading">⏳ Memuat berita terkini...</div>
+            </div>
+        </div>
+    `;
+    
+    async function fetchNews() {
+        const newsDiv = document.getElementById('newsList');
+        if (!newsDiv) return;
+        newsDiv.innerHTML = '<div class="loading">📡 Mengambil berita...</div>';
+        try {
+            const rssUrl = 'https://cointelegraph.com/rss';
+            const proxyUrl = `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(rssUrl)}`;
+            const response = await fetch(proxyUrl);
+            if (!response.ok) throw new Error(`HTTP ${response.status}`);
+            const data = await response.json();
+            if (!data.items || data.items.length === 0) throw new Error('Tidak ada berita');
+            
+            let html = '<div style="display:flex; flex-direction:column; gap:12px;">';
+            for (let i = 0; i < Math.min(data.items.length, 20); i++) {
+                const item = data.items[i];
+                const title = item.title;
+                const link = item.link;
+                const pubDate = new Date(item.pubDate).toLocaleString('id-ID');
+                let thumbnail = item.thumbnail || '';
+                html += `
+                    <div style="background:#0b0e11; border-radius:10px; padding:12px; border-left:3px solid #fcd535;">
+                        <div style="display:flex; gap:12px; align-items:center;">
+                            ${thumbnail ? `<img src="${thumbnail}" style="width:50px; height:50px; object-fit:cover; border-radius:8px;" onerror="this.style.display='none'">` : ''}
+                            <div style="flex:1;">
+                                <a href="${link}" target="_blank" style="color:#eaecef; text-decoration:none; font-weight:bold; font-size:14px;">${title}</a>
+                                <div style="font-size:11px; color:#848e9c; margin-top:5px;">🕒 ${pubDate}</div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+            html += '</div>';
+            newsDiv.innerHTML = html;
+        } catch (err) {
+            console.error(err);
+            newsDiv.innerHTML = `<div style="color:#cf304a; text-align:center;">⚠️ Gagal memuat berita.<br>${err.message}<br><button onclick="showTrendingNews()" style="background:#fcd535; border:none; padding:6px 12px; border-radius:6px; margin-top:10px;">Coba Lagi</button></div>`;
+        }
+    }
+    await fetchNews();
+    document.getElementById('refreshNewsBtn')?.addEventListener('click', fetchNews);
+};
+
+// ======================== DETEKTOR KOIN PUMP (SEDERHANA) ========================
+window.showCustomScanner = async function() {
+    window.closeNav();
+    marketListContainer.style.display = 'none';
+    scannerContainer.style.display = 'block';
+    sniperContainer.style.display = 'none';
+    await fetchGlobalMarketData(true);
+    scannerContainer.innerHTML = `<div class="scanner-ui"><h3>⚡ Detektor Koin Pump</h3><div class="input-group"><input type="number" id="pumpThresholdSimple" placeholder="Min %" value="7" step="0.5"><button id="btnDetectPumpSimple">Scan Pump</button></div><div id="pumpResultSimple"></div></div>`;
+    document.getElementById('btnDetectPumpSimple').onclick = async () => {
+        let thr = parseFloat(document.getElementById('pumpThresholdSimple').value) || 7;
+        const resDiv = document.getElementById('pumpResultSimple');
+        await fetchGlobalMarketData(true);
+        const pumpCoins = globalMarketData.filter(c => (c.price_change_percentage_24h ?? 0) >= thr).sort((a,b)=>b.price_change_percentage_24h - a.price_change_percentage_24h);
+        if(!pumpCoins.length) { resDiv.innerHTML = `<div>Tidak ada koin > ${thr}%</div>`; return; }
+        let html = `<div>🚀 ${pumpCoins.length} koin pump > ${thr}%:</div>`;
+        pumpCoins.slice(0,30).forEach(c => { html += `<div>${c.symbol.toUpperCase()} +${c.price_change_percentage_24h.toFixed(2)}%</div>`; });
+        resDiv.innerHTML = html;
+    };
+};
+
+// ======================== TOP PUMP PAGE ========================
+window.showPumpPage = async function() {
+    window.closeNav();
+    marketListContainer.style.display = 'none';
+    scannerContainer.style.display = 'block';
+    sniperContainer.style.display = 'none';
+    await fetchGlobalMarketData(true);
+    const top = [...globalMarketData].sort((a,b)=>(b.price_change_percentage_24h??0)-(a.price_change_percentage_24h??0)).slice(0,25);
+    let html = `<div class="scanner-ui"><h3>🚀 Top 25 Pump 24 Jam</h3>`;
+    top.forEach(c => { html += `<div>${c.symbol.toUpperCase()} +${c.price_change_percentage_24h.toFixed(2)}%</div>`; });
+    html += `</div>`;
+    scannerContainer.innerHTML = html;
 };
 
 // ======================== SNIPER SCANNER UI ========================
@@ -178,31 +270,23 @@ async function buildSniperUI() {
             <div id="sniperLog" style="margin-top:20px; background:#0b0e11; padding:10px; border-radius:8px; max-height:300px; overflow-y:auto; font-size:12px; text-align:left;"></div>
         </div>
     `;
-
     document.getElementById('startSniperBtn').onclick = () => startSniperScanning();
     document.getElementById('stopSniperBtn').onclick = () => stopSniperScanning();
 }
 
 async function startSniperScanning() {
     if (sniperScanning) return;
-    // Ambil nilai dari UI
     volumeMin = parseFloat(document.getElementById('volStart').value) || 0;
     volumeMax = parseFloat(document.getElementById('volEnd').value) || 900000000;
     scanIntervalSec = parseFloat(document.getElementById('intervalSec').value) || 2.5;
     historyLength = parseInt(document.getElementById('historyCount').value) || 4;
     pumpThresholdPercent = parseFloat(document.getElementById('pumpThreshold').value) || 3;
-
-    // Reset history
     priceHistory = {};
-
-    // Tampilkan tombol stop
     document.getElementById('startSniperBtn').style.display = 'none';
     document.getElementById('stopSniperBtn').style.display = 'block';
     sniperScanning = true;
     logToSniper('✅ Sniper scanner dimulai. Interval: ' + scanIntervalSec + ' detik');
-    // Langsung scan sekali
     await performSniperScan();
-    // Set interval
     if (sniperInterval) clearInterval(sniperInterval);
     sniperInterval = setInterval(async () => {
         if (sniperScanning) await performSniperScan();
@@ -210,10 +294,7 @@ async function startSniperScanning() {
 }
 
 function stopSniperScanning() {
-    if (sniperInterval) {
-        clearInterval(sniperInterval);
-        sniperInterval = null;
-    }
+    if (sniperInterval) { clearInterval(sniperInterval); sniperInterval = null; }
     sniperScanning = false;
     document.getElementById('startSniperBtn').style.display = 'block';
     document.getElementById('stopSniperBtn').style.display = 'none';
@@ -221,43 +302,25 @@ function stopSniperScanning() {
 }
 
 async function performSniperScan() {
-    // Ambil data pasar terbaru
     await fetchGlobalMarketData(true);
     if (!globalMarketData.length) return;
-
     let detectedCoins = [];
     for (let coin of globalMarketData) {
         const symbol = coin.symbol.toUpperCase();
         const currentPrice = coin.current_price;
-        const volume = coin.total_volume; // volume 24h dalam USD
+        const volume = coin.total_volume;
         if (volume < volumeMin || volume > volumeMax) continue;
-
-        // Simpan history harga
         if (!priceHistory[symbol]) priceHistory[symbol] = [];
         priceHistory[symbol].push(currentPrice);
         if (priceHistory[symbol].length > historyLength) priceHistory[symbol].shift();
-
-        // Perlu minimal 2 data untuk membandingkan
         if (priceHistory[symbol].length < 2) continue;
-
         const prevPrice = priceHistory[symbol][priceHistory[symbol].length-2];
         const priceChangePercent = ((currentPrice - prevPrice) / prevPrice) * 100;
-        
         if (priceChangePercent >= pumpThresholdPercent) {
-            // Terdeteksi pump dalam interval ini
-            detectedCoins.push({
-                symbol: symbol,
-                name: coin.name,
-                price: currentPrice,
-                change: priceChangePercent,
-                volume: volume,
-                image: coin.image
-            });
+            detectedCoins.push({ symbol, name: coin.name, price: currentPrice, change: priceChangePercent, volume, image: coin.image });
         }
     }
-
     if (detectedCoins.length > 0) {
-        // Urutkan dari % tertinggi
         detectedCoins.sort((a,b) => b.change - a.change);
         for (let hit of detectedCoins.slice(0,5)) {
             const message = `🚨 *SNIPER DETECTED* 🚨\nCoin: ${hit.symbol} (${hit.name})\nHarga: $${hit.price.toFixed(6)}\nKenaikan dalam ${scanIntervalSec} detik: +${hit.change.toFixed(2)}%\nVolume 24j: $${hit.volume.toLocaleString()}\nWaktu: ${new Date().toLocaleTimeString()}`;
@@ -282,125 +345,34 @@ function logToSniper(msg) {
 
 // ======================== TELEGRAM NOTIFICATION ========================
 async function sendTelegramMessage(text) {
-    if (!TELEGRAM_BOT_TOKEN || TELEGRAM_BOT_TOKEN === "7ufge3FrWNtaGBNx5AEysvvEyudCmnk4QBWurLmTxdjn" && TELEGRAM_CHAT_ID === "8294553147") {
-        // Gunakan token yang sudah diberikan user
+    if (!TELEGRAM_BOT_TOKEN || TELEGRAM_BOT_TOKEN === "8548300908:AAGMsHeWFtCghVS4N1Vabl4Vb0ay6PCwH94") {
+        // token sudah diisi, lanjut
     }
     const url = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`;
     try {
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 10000);
         const response = await fetch(url, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                chat_id: TELEGRAM_CHAT_ID,
-                text: text,
-                parse_mode: 'Markdown'
-            })
+            body: JSON.stringify({ chat_id: TELEGRAM_CHAT_ID, text: text, parse_mode: 'Markdown' }),
+            signal: controller.signal
         });
-        if (!response.ok) throw new Error('Gagal kirim ke Telegram');
-        console.log('Telegram notifikasi terkirim');
+        clearTimeout(timeoutId);
+        if (!response.ok) {
+            const errorData = await response.json().catch(() => ({}));
+            throw new Error(`HTTP ${response.status}: ${errorData.description || 'Unknown error'}`);
+        }
+        console.log('✅ Telegram notifikasi terkirim');
+        logToSniper('✅ Notifikasi Telegram berhasil dikirim');
     } catch (err) {
         console.error('Telegram error:', err);
         logToSniper(`❌ Gagal kirim notifikasi Telegram: ${err.message}`);
-    }
-}
-
-// ======================== TRENDING NEWS (CoinTelegraph RSS) ========================
-window.showTrendingNews = async function() {
-    window.closeNav();
-    marketListContainer.style.display = 'none';
-    scannerContainer.style.display = 'block';
-    sniperContainer.style.display = 'none';
-    
-    scannerContainer.innerHTML = `
-        <div class="scanner-ui">
-            <h3 style="margin-top:0;">📰 Berita Crypto Trending</h3>
-            <p style="font-size:13px; color:#fcd535;">Update berita terbaru dari Cointelegraph</p>
-            <button id="refreshNewsBtn" style="background:#2b3139; border:none; color:#fcd535; padding:5px 12px; border-radius:6px; margin-bottom:15px; cursor:pointer;">⟳ Refresh</button>
-            <div id="newsList" style="text-align:left; max-height:550px; overflow-y:auto;">
-                <div class="loading">⏳ Memuat berita terkini...</div>
-            </div>
-        </div>
-    `;
-    
-    async function fetchNews() {
-        const newsDiv = document.getElementById('newsList');
-        if (!newsDiv) return;
-        newsDiv.innerHTML = '<div class="loading">📡 Mengambil berita...</div>';
-        try {
-            // Gunakan RSS2JSON proxy untuk menghindari CORS
-            const rssUrl = 'https://cointelegraph.com/rss';
-            const proxyUrl = `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(rssUrl)}`;
-            const response = await fetch(proxyUrl);
-            if (!response.ok) throw new Error('Gagal mengambil berita');
-            const data = await response.json();
-            if (!data.items || data.items.length === 0) throw new Error('Berita kosong');
-            
-            let html = '<div style="display:flex; flex-direction:column; gap:12px;">';
-            for (let i = 0; i < Math.min(data.items.length, 20); i++) {
-                const item = data.items[i];
-                const title = item.title;
-                const link = item.link;
-                const pubDate = new Date(item.pubDate).toLocaleString('id-ID');
-                // Ambil thumbnail dari deskripsi jika ada (sederhana)
-                let thumbnail = '';
-                if (item.thumbnail) thumbnail = item.thumbnail;
-                else if (item.enclosure && item.enclosure.link) thumbnail = item.enclosure.link;
-                
-                html += `
-                    <div style="background:#0b0e11; border-radius:10px; padding:12px; border-left:3px solid #fcd535;">
-                        <div style="display:flex; gap:12px; align-items:center;">
-                            ${thumbnail ? `<img src="${thumbnail}" style="width:50px; height:50px; object-fit:cover; border-radius:8px;" onerror="this.style.display='none'">` : ''}
-                            <div style="flex:1;">
-                                <a href="${link}" target="_blank" style="color:#eaecef; text-decoration:none; font-weight:bold; font-size:14px;">${title}</a>
-                                <div style="font-size:11px; color:#848e9c; margin-top:5px;">🕒 ${pubDate}</div>
-                            </div>
-                        </div>
-                    </div>
-                `;
-            }
-            html += '</div>';
-            newsDiv.innerHTML = html;
-        } catch (err) {
-            console.error(err);
-            newsDiv.innerHTML = `<div style="color:#cf304a; text-align:center;">⚠️ Gagal memuat berita.<br>${err.message}<br><button onclick="showTrendingNews()" style="background:#fcd535; border:none; padding:6px 12px; border-radius:6px; margin-top:10px;">Coba Lagi</button></div>`;
+        if (err.message === 'Failed to fetch') {
+            logToSniper('💡 Pastikan koneksi internet dan token benar.');
         }
     }
-    
-    await fetchNews();
-    document.getElementById('refreshNewsBtn')?.addEventListener('click', fetchNews);
-};
-};
-
-window.showBinanceScanner = function() {
-    window.closeNav();
-    marketListContainer.style.display = 'none';
-    scannerContainer.style.display = 'block';
-    sniperContainer.style.display = 'none';
-    scannerContainer.innerHTML = `<div class="scanner-ui"><h3>🔍 Binance Checker</h3><input id="binanceSymbol" placeholder="BTCUSDT"><button id="binanceCheck">Cek</button><div id="binanceResult"></div></div>`;
-    document.getElementById('binanceCheck').onclick = async () => {
-        let sym = document.getElementById('binanceSymbol').value.toUpperCase();
-        if(!sym.endsWith('USDT')) sym+='USDT';
-        const resDiv = document.getElementById('binanceResult');
-        try {
-            const r = await fetch(`https://api.binance.com/api/v3/ticker/24hr?symbol=${sym}`);
-            const d = await r.json();
-            resDiv.innerHTML = `💰 Harga: $${parseFloat(d.lastPrice).toLocaleString()}<br>📈 24j: ${d.priceChangePercent}%`;
-        } catch(e){ resDiv.innerHTML = `Error: pair tidak ditemukan`; }
-    };
-};
-
-window.showPumpPage = async function() {
-    window.closeNav();
-    marketListContainer.style.display = 'none';
-    scannerContainer.style.display = 'block';
-    sniperContainer.style.display = 'none';
-    await fetchGlobalMarketData(true);
-    const top = [...globalMarketData].sort((a,b)=>(b.price_change_percentage_24h??0)-(a.price_change_percentage_24h??0)).slice(0,25);
-    let html = `<div class="scanner-ui"><h3>🚀 Top 25 Pump 24 Jam</h3>`;
-    top.forEach(c => { html += `<div>${c.symbol.toUpperCase()} +${c.price_change_percentage_24h.toFixed(2)}%</div>`; });
-    html += `</div>`;
-    scannerContainer.innerHTML = html;
-};
+}
 
 // ======================== AUTO REFRESH & INIT ========================
 function startAutoRefresh() {
