@@ -304,24 +304,71 @@ async function sendTelegramMessage(text) {
     }
 }
 
-// ======================== OTHER SCANNERS (detektor pump, binance, top pump) ========================
-window.showCustomScanner = async function() {
+// ======================== TRENDING NEWS (CoinTelegraph RSS) ========================
+window.showTrendingNews = async function() {
     window.closeNav();
     marketListContainer.style.display = 'none';
     scannerContainer.style.display = 'block';
     sniperContainer.style.display = 'none';
-    await fetchGlobalMarketData(true);
-    scannerContainer.innerHTML = `<div class="scanner-ui"><h3>⚡ Detektor Koin Pump</h3><div class="input-group"><input type="number" id="pumpThresholdSimple" placeholder="Min %" value="7" step="0.5"><button id="btnDetectPumpSimple">Scan Pump</button></div><div id="pumpResultSimple"></div></div>`;
-    document.getElementById('btnDetectPumpSimple').onclick = async () => {
-        let thr = parseFloat(document.getElementById('pumpThresholdSimple').value) || 7;
-        const resDiv = document.getElementById('pumpResultSimple');
-        await fetchGlobalMarketData(true);
-        const pumpCoins = globalMarketData.filter(c => (c.price_change_percentage_24h ?? 0) >= thr).sort((a,b)=>b.price_change_percentage_24h - a.price_change_percentage_24h);
-        if(!pumpCoins.length) { resDiv.innerHTML = `<div>Tidak ada koin > ${thr}%</div>`; return; }
-        let html = `<div>🚀 ${pumpCoins.length} koin pump > ${thr}%:</div>`;
-        pumpCoins.slice(0,30).forEach(c => { html += `<div>${c.symbol.toUpperCase()} +${c.price_change_percentage_24h.toFixed(2)}%</div>`; });
-        resDiv.innerHTML = html;
-    };
+    
+    scannerContainer.innerHTML = `
+        <div class="scanner-ui">
+            <h3 style="margin-top:0;">📰 Berita Crypto Trending</h3>
+            <p style="font-size:13px; color:#fcd535;">Update berita terbaru dari Cointelegraph</p>
+            <button id="refreshNewsBtn" style="background:#2b3139; border:none; color:#fcd535; padding:5px 12px; border-radius:6px; margin-bottom:15px; cursor:pointer;">⟳ Refresh</button>
+            <div id="newsList" style="text-align:left; max-height:550px; overflow-y:auto;">
+                <div class="loading">⏳ Memuat berita terkini...</div>
+            </div>
+        </div>
+    `;
+    
+    async function fetchNews() {
+        const newsDiv = document.getElementById('newsList');
+        if (!newsDiv) return;
+        newsDiv.innerHTML = '<div class="loading">📡 Mengambil berita...</div>';
+        try {
+            // Gunakan RSS2JSON proxy untuk menghindari CORS
+            const rssUrl = 'https://cointelegraph.com/rss';
+            const proxyUrl = `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(rssUrl)}`;
+            const response = await fetch(proxyUrl);
+            if (!response.ok) throw new Error('Gagal mengambil berita');
+            const data = await response.json();
+            if (!data.items || data.items.length === 0) throw new Error('Berita kosong');
+            
+            let html = '<div style="display:flex; flex-direction:column; gap:12px;">';
+            for (let i = 0; i < Math.min(data.items.length, 20); i++) {
+                const item = data.items[i];
+                const title = item.title;
+                const link = item.link;
+                const pubDate = new Date(item.pubDate).toLocaleString('id-ID');
+                // Ambil thumbnail dari deskripsi jika ada (sederhana)
+                let thumbnail = '';
+                if (item.thumbnail) thumbnail = item.thumbnail;
+                else if (item.enclosure && item.enclosure.link) thumbnail = item.enclosure.link;
+                
+                html += `
+                    <div style="background:#0b0e11; border-radius:10px; padding:12px; border-left:3px solid #fcd535;">
+                        <div style="display:flex; gap:12px; align-items:center;">
+                            ${thumbnail ? `<img src="${thumbnail}" style="width:50px; height:50px; object-fit:cover; border-radius:8px;" onerror="this.style.display='none'">` : ''}
+                            <div style="flex:1;">
+                                <a href="${link}" target="_blank" style="color:#eaecef; text-decoration:none; font-weight:bold; font-size:14px;">${title}</a>
+                                <div style="font-size:11px; color:#848e9c; margin-top:5px;">🕒 ${pubDate}</div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+            html += '</div>';
+            newsDiv.innerHTML = html;
+        } catch (err) {
+            console.error(err);
+            newsDiv.innerHTML = `<div style="color:#cf304a; text-align:center;">⚠️ Gagal memuat berita.<br>${err.message}<br><button onclick="showTrendingNews()" style="background:#fcd535; border:none; padding:6px 12px; border-radius:6px; margin-top:10px;">Coba Lagi</button></div>`;
+        }
+    }
+    
+    await fetchNews();
+    document.getElementById('refreshNewsBtn')?.addEventListener('click', fetchNews);
+};
 };
 
 window.showBinanceScanner = function() {
