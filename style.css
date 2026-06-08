@@ -310,3 +310,62 @@ header {
         height: 32px;
     }
     }
+/* Perbaikan tampilan input field agar teks terang */
+.input-field,
+.scanner-ui input,
+.scanner-ui input[type="number"],
+.scanner-ui input[type="text"] {
+    background-color: #2b3139;
+    border: 1px solid #6c7a8e;
+    color: #ffffff !important;
+    padding: 10px 12px;
+    border-radius: 8px;
+    font-size: 14px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.input-field::placeholder,
+.scanner-ui input::placeholder {
+    color: #a0aaba;
+    opacity: 1;
+}
+
+/* Perbaikan tombol di scanner */
+.btn-scan,
+.scanner-ui button {
+    background-color: #02c076;
+    color: #ffffff;
+    border: none;
+    padding: 12px 20px;
+    border-radius: 8px;
+    font-weight: bold;
+    cursor: pointer;
+    font-size: 14px;
+    transition: 0.2s;
+}
+
+.btn-scan:hover,
+.scanner-ui button:hover {
+    background-color: #029f5f;
+    transform: scale(0.98);
+}
+
+/* Label di scanner jadi lebih terang */
+.scanner-ui label {
+    color: #eaecef;
+    font-size: 13px;
+    display: block;
+    margin-bottom: 5px;
+}
+
+/* Hasil deteksi pump */
+#pumpResultSimple,
+#pumpResult,
+#sniperLog {
+    background-color: #0f1117;
+    padding: 10px;
+    border-radius: 8px;
+    color: #eaecef;
+    font-size: 13px;
+}
