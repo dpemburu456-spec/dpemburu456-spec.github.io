@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HARUM - Himpunan Alumni Roudlotul Ulum</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div id="login-screen">
+        <div class="login-box">
+            <div class="logo-container">
+                <div class="logo-placeholder">
+                    <img src="Penghapusan Pintar (1).jpg" alt="Logo HARUM" onerror="this.src='https://via.placeholder.com/120?text=HARUM'">
+                </div>
+            </div>
+            <h2>Login Anggota HARUM</h2>
+            <p class="login-subtitle">Khusus Anggota Resmi Grup WA HARUM Malang.</p>
+            
+            <div class="form-group">
+                <label for="username">Nama Lengkap</label>
+                <input type="text" id="username" placeholder="Masukkan nama Anda">
+            </div>
+            <div class="form-group">
+                <label for="whatsapp">Nomor WhatsApp</label>
+                <input type="text" id="whatsapp" placeholder="Contoh: 08123456xxx">
+            </div>
+            <div class="form-group">
+                <label for="grouppass">Password Khusus Grup WA</label>
+                <input type="password" id="grouppass" placeholder="Masukkan password grup">
+            </div>
+            <button class="btn" onclick="prosesLogin()">Masuk Aplikasi</button>
+            
+            <p class="login-footer-text">Belum gabung grup atau lupa password?</p>
+            <button class="btn wa-btn" onclick="bukaGrupWA()">Cek Deskripsi Grup WA</button>
+        </div>
+    </div>
+
+    <div id="main-app" style="display: none;">
+        <header>
+            <div class="logo-container">
+                <div class="logo-placeholder">
+                    <img src="Penghapusan Pintar (1).jpg" alt="Logo HARUM" onerror="this.src='https://via.placeholder.com/120?text=HARUM'">
+                </div>
+            </div>
+            <h1>HARUM MALANG</h1>
+            <p>Himpunan Alumni Roudlotul Ulum Malang</p>
+        </header>
+
+        <div class="widget-bar">
+            <div class="calendar-wrapper">
+                <div class="masehi-jawa" id="kalender-masehi-jawa">Memuat Kalender...</div>
+                <div class="hijriah" id="kalender-hijriah"></div>
+            </div>
+            <div class="digital-clock" id="jam-info">00:00:00 WIB</div>
+        </div>
+
+        <nav>
+            <button class="nav-btn active" onclick="bukaHalaman('beranda')">Beranda</button>
+            <button class="nav-btn" onclick="bukaHalaman('jumat-pahing')">Jumat Pahing</button>
+            <button class="nav-btn" onclick="bukaHalaman('iuran')">Iuran & Kas</button>
+            <button class="nav-btn" onclick="bukaHalaman('sabilun-najah')">Sabilun Najah</button>
+            <button class="nav-btn logout-btn" onclick="logout()">Keluar</button>
+        </nav>
+
+        <main>
+            <div id="beranda" class="page active">
+                <h2>Selamat Datang, <span id="nama-user">Anggota</span>!</h2>
+                <p>Aplikasi ini dirancang sebagai wadah komunikasi, informasi, dan transparansi keuangan bagi seluruh alumni Pondok Pesantren Roudlotul Ulum yang berada di wilayah Malang (HARUM).</p>
+                <div class="card">
+                    <h3>Pemberitahuan Terkini</h3>
+                    <p style="margin-top: 5px;">Silakan cek menu <strong>Jumat Pahing</strong> untuk melihat jadwal pertemuan selapanan terdekat, serta menu <strong>Iuran & Kas</strong> untuk memantau saldo organisasi.</p>
+                </div>
+            </div>
+
+            <div id="jumat-pahing" class="page">
+                <h2>Kumpulan Jumat Pahing (Selapanan)</h2>
+                <p>Kumpulan rutin alumni HARUM diadakan setiap <strong>sekali selapan (35 hari)</strong> pada hari <strong>Jumat Pahing</strong> sebagai sarana silaturahmi, doa bersama, dan koordinasi.</p>
+                <div class="card">
+                    <h3>Agenda Kegiatan:</h3>
+                    <ul>
+                        <li>Pembacaan Istighosah & Tahlil</li>
+                        <li>Kajian Kitab / Mauidhoh Hasanah</li>
+                        <li>Musyawarah internal alumni</li>
+                        <li>Penarikan Iuran Wajib</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div id="iuran" class="page">
+                <h2>Transparansi Kas & Iuran Wajib</h2>
+                <p>Setiap anggota diwajibkan membayar iuran sebesar <strong>Rp. 20.000,-</strong> pada saat kumpulan Jumat Pahing.</p>
+                
+                <div class="card kas-box">
+                    <div><strong>Total Uang Kas Saat Ini:</strong></div>
+                    <div class="kas-total">Rp. 2.450.000</div>
+                </div>
+
+                <h3>Daftar Pembayaran Iuran Anggota</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>No</th>
+                            <th>Nama Anggota</th>
+                            <th>Jumat Pahing Lalu</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>1</td><td>Ahmad Muzakki</td><td>Rp. 20.000</td><td><span class="badge badge-success">Lunas</span></td></tr>
+                        <tr><td>2</td><td>Siti Khodijah</td><td>Rp. 20.000</td><td><span class="badge badge-success">Lunas</span></td></tr>
+                        <tr><td>3</td><td>Muhammad Rizqi</td><td>-</td><td><span class="badge badge-danger">Belum</span></td></tr>
+                        <tr><td>4</td><td>Fatimah Zahro</td><td>Rp. 20.000</td><td><span class="badge badge-success">Lunas</span></td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div id="sabilun-najah" class="page">
+                <h2>Buku Sabilun Najah</h2>
+                <p>Halaman ini memuat panduan, bacaan wirid, amalan, atau catatan organisasi yang bersumber dari kitab/buku panduan alumni <strong>Sabilun Najah</strong>.</p>
+                <div class="pdf-box">
+                    <p><strong>[ Fitur Dokumen Digital Sabilun Najah ]</strong></p>
+                    <p style="font-size: 12px; margin-bottom: 10px;">Anda dapat menyematkan file PDF Kitab Sabilun Najah di sini.</p>
+                    <button class="btn" style="width: auto; padding: 5px 15px; font-size: 13px;" onclick="alert('Fitur dalam pengembangan')">Buka Buku / Dokumen</button>
+                </div>
+            </div>
+        </main>
+
+        <footer>
+            &copy; 2026 HARUM - Himpunan Alumni Roudlotul Ulum Malang. All Rights Reserved.
+        </footer>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
