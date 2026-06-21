@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Cah Angon · Media Publik</title>
+    <title>Cah Angon · Feed Media</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -14,7 +14,6 @@
             padding: 0;
             box-sizing: border-box;
             font-family: 'Poppins', sans-serif;
-            transition: background 0.3s ease, color 0.3s ease, border-color 0.3s ease;
         }
 
         :root {
@@ -26,15 +25,15 @@
             --text: #1e2a1e;
             --text-secondary: #3f4f3f;
             --border: #d4e0d4;
-            --shadow: 0 8px 24px rgba(0, 20, 0, 0.08);
-            --radius: 18px;
+            --shadow: 0 4px 16px rgba(0, 20, 0, 0.06);
+            --radius: 16px;
             --nav-bg: #ffffff;
             --input-bg: #f5faf5;
             --placeholder: #7a8f7a;
             --toast-bg: #1e2a1e;
-            --item-hover: #e8f0e8;
             --admin-badge: #ff6b35;
             --user-badge: #4CAF50;
+            --feed-gap: 16px;
         }
 
         .dark-mode {
@@ -43,12 +42,11 @@
             --text: #e8f0e8;
             --text-secondary: #b0c8b0;
             --border: #2f402f;
-            --shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+            --shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
             --nav-bg: #1a261a;
             --input-bg: #263226;
             --placeholder: #8aa08a;
             --toast-bg: #e8f0e8;
-            --item-hover: #2a3a2a;
         }
 
         body {
@@ -59,147 +57,39 @@
             align-items: center;
             justify-content: center;
             padding: 12px;
+            transition: background 0.3s, color 0.3s;
         }
 
         #app {
             max-width: 420px;
             width: 100%;
             background: var(--card-bg);
-            border-radius: var(--radius);
-            box-shadow: var(--shadow);
+            border-radius: 24px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
             overflow: hidden;
             position: relative;
-            min-height: 700px;
+            min-height: 720px;
             display: flex;
             flex-direction: column;
+            transition: background 0.3s;
         }
 
-        /* LOGIN */
-        #loginPage {
-            padding: 40px 28px 32px;
-            background: linear-gradient(145deg, #1e5a32, #2d7d46);
-            min-height: 600px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            border-radius: var(--radius);
-        }
-
-        .logo-wrap {
-            text-align: center;
-            margin-bottom: 40px;
-        }
-
-        .logo-wrap i {
-            font-size: 56px;
-            color: #b8e0b8;
-            background: rgba(255, 255, 255, 0.12);
-            padding: 18px;
-            border-radius: 60px;
-            margin-bottom: 12px;
-            display: inline-block;
-        }
-
-        .logo-wrap h1 {
-            font-weight: 700;
-            font-size: 32px;
-            color: #fff;
-            letter-spacing: -0.5px;
-        }
-
-        .logo-wrap p {
-            color: #c8e0c8;
-            font-size: 14px;
-            font-weight: 400;
-            margin-top: 4px;
-        }
-
-        #loginForm input {
-            width: 100%;
-            padding: 16px 18px;
-            border-radius: 60px;
-            border: none;
-            background: rgba(255, 255, 255, 0.88);
-            font-size: 15px;
-            margin-bottom: 14px;
-            color: #1e2a1e;
-            outline: 2px solid transparent;
-            transition: 0.2s;
-        }
-
-        #loginForm input:focus {
-            outline: 2px solid #b8e0b8;
-            background: #fff;
-        }
-
-        #loginForm button {
-            width: 100%;
-            padding: 16px;
-            border: none;
-            border-radius: 60px;
-            background: #f5faf5;
-            color: #1e5a32;
-            font-weight: 700;
-            font-size: 17px;
-            margin-top: 6px;
-            cursor: pointer;
-            transition: 0.2s;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-        }
-
-        #loginForm button:active {
-            transform: scale(0.97);
-        }
-
-        .forgot-link {
-            display: block;
-            text-align: center;
-            margin-top: 20px;
-            color: #c8e0c8;
-            font-size: 14px;
-            text-decoration: none;
-            font-weight: 400;
-        }
-
-        .login-error {
-            color: #ffd4d4;
-            background: rgba(200, 50, 50, 0.2);
-            padding: 10px;
-            border-radius: 30px;
-            text-align: center;
-            font-size: 14px;
-            margin-bottom: 12px;
-            display: none;
-        }
-
-        .login-info {
-            color: #d4e8d4;
-            font-size: 13px;
-            text-align: center;
-            margin-top: 16px;
-            background: rgba(255,255,255,0.08);
-            padding: 12px;
-            border-radius: 16px;
-        }
-
-        /* MAIN APP */
-        #mainApp {
-            display: none;
-            flex-direction: column;
-            min-height: 700px;
-        }
-
+        /* HEADER */
         .app-header {
-            padding: 16px 20px 10px 20px;
+            padding: 14px 18px 10px;
             display: flex;
             align-items: center;
             justify-content: space-between;
             border-bottom: 1px solid var(--border);
+            background: var(--card-bg);
+            position: sticky;
+            top: 0;
+            z-index: 10;
         }
 
         .app-header h2 {
-            font-size: 20px;
-            font-weight: 600;
+            font-size: 18px;
+            font-weight: 700;
             display: flex;
             align-items: center;
             gap: 8px;
@@ -209,38 +99,36 @@
             color: var(--primary);
         }
 
-        .header-right {
+        .header-actions {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
         }
 
-        .admin-badge-header {
-            background: var(--admin-badge);
-            color: #fff;
-            font-size: 10px;
-            padding: 3px 10px;
-            border-radius: 30px;
-            font-weight: 600;
-        }
-
-        .theme-toggle {
+        .header-btn {
             background: var(--input-bg);
             border: none;
             border-radius: 40px;
-            padding: 8px 14px;
-            font-size: 18px;
+            padding: 6px 12px;
+            font-size: 14px;
             color: var(--text);
             cursor: pointer;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .header-btn i {
+            font-size: 16px;
         }
 
         /* TAB CONTENT */
         .tab-content {
             flex: 1;
-            padding: 14px 16px 80px;
+            padding: 0 0 80px 0;
             overflow-y: auto;
-            max-height: 600px;
+            max-height: 620px;
+            background: var(--bg);
         }
 
         .tab-pane {
@@ -253,11 +141,195 @@
         }
 
         @keyframes fadeUp {
-            0% { opacity: 0.4; transform: translateY(8px); }
+            0% { opacity: 0.3; transform: translateY(6px); }
             100% { opacity: 1; transform: translateY(0); }
         }
 
-        .pane-title {
+        /* ===== FEED ===== */
+        .feed-container {
+            padding: 12px 14px;
+            display: flex;
+            flex-direction: column;
+            gap: var(--feed-gap);
+        }
+
+        .feed-item {
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border);
+            transition: 0.2s;
+        }
+
+        .feed-item:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+        }
+
+        .feed-header {
+            padding: 12px 14px 8px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .feed-user {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .feed-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: var(--primary);
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 14px;
+            flex-shrink: 0;
+        }
+
+        .feed-user-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .feed-username {
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .feed-username .admin-badge {
+            font-size: 10px;
+            background: var(--admin-badge);
+            color: #fff;
+            padding: 1px 8px;
+            border-radius: 30px;
+            margin-left: 4px;
+        }
+
+        .feed-time {
+            font-size: 11px;
+            color: var(--text-secondary);
+        }
+
+        .feed-type-badge {
+            font-size: 10px;
+            padding: 2px 10px;
+            border-radius: 30px;
+            font-weight: 500;
+            background: var(--input-bg);
+            color: var(--text-secondary);
+        }
+
+        .feed-type-badge.video { color: #ff0000; background: #ff000015; }
+        .feed-type-badge.reels { color: #000; background: #00000010; }
+        .feed-type-badge.audio { color: #1db954; background: #1db95415; }
+        .dark-mode .feed-type-badge.reels { color: #fff; background: #ffffff15; }
+
+        .feed-title {
+            padding: 0 14px 8px;
+            font-weight: 500;
+            font-size: 15px;
+            line-height: 1.4;
+        }
+
+        .feed-media {
+            width: 100%;
+            background: var(--input-bg);
+            aspect-ratio: 16 / 9;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .feed-media.portrait {
+            aspect-ratio: 9 / 16;
+            max-height: 400px;
+        }
+
+        .feed-media iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        .feed-media .placeholder-icon {
+            color: var(--placeholder);
+            font-size: 48px;
+            opacity: 0.3;
+        }
+
+        .feed-audio {
+            padding: 14px;
+            background: var(--input-bg);
+        }
+
+        .feed-audio audio {
+            width: 100%;
+            border-radius: 40px;
+            background: var(--card-bg);
+        }
+
+        .feed-audio-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 10px;
+        }
+
+        .feed-audio-info i {
+            font-size: 28px;
+            color: var(--primary);
+        }
+
+        .feed-audio-info div {
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+
+        .feed-actions {
+            padding: 8px 14px 12px;
+            display: flex;
+            gap: 16px;
+            border-top: 1px solid var(--border);
+        }
+
+        .feed-actions button {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            font-size: 12px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            padding: 4px 8px;
+            border-radius: 30px;
+            transition: 0.2s;
+        }
+
+        .feed-actions button:hover {
+            background: var(--input-bg);
+        }
+
+        .feed-actions .delete-btn {
+            color: #d9534f;
+            margin-left: auto;
+        }
+
+        /* ===== TAB TAMBAH ===== */
+        .add-container {
+            padding: 16px;
+        }
+
+        .add-container .pane-title {
             font-size: 18px;
             font-weight: 600;
             margin-bottom: 14px;
@@ -266,7 +338,7 @@
             gap: 8px;
         }
 
-        .pane-title .count-badge {
+        .add-container .pane-title .count-badge {
             font-size: 12px;
             background: var(--primary);
             color: #fff;
@@ -275,237 +347,209 @@
             font-weight: 500;
         }
 
-        .input-group {
-            display: flex;
-            gap: 10px;
+        .add-form {
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            padding: 16px;
+            border: 1px solid var(--border);
             margin-bottom: 16px;
-            flex-wrap: wrap;
         }
 
-        .input-group input {
-            flex: 1;
-            padding: 12px 16px;
-            border-radius: 60px;
+        .add-form label {
+            font-weight: 500;
+            font-size: 13px;
+            display: block;
+            margin-bottom: 4px;
+            color: var(--text-secondary);
+        }
+
+        .add-form input, .add-form textarea {
+            width: 100%;
+            padding: 12px 14px;
+            border-radius: 12px;
             border: 1px solid var(--border);
             background: var(--input-bg);
             color: var(--text);
             font-size: 13px;
             outline: none;
-            min-width: 140px;
+            margin-bottom: 10px;
+            transition: 0.2s;
         }
 
-        .input-group input::placeholder {
-            color: var(--placeholder);
+        .add-form input:focus, .add-form textarea:focus {
+            border-color: var(--primary);
         }
 
-        .input-group button {
+        .add-form textarea {
+            resize: vertical;
+            min-height: 50px;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .add-form .btn-add {
             background: var(--primary);
             border: none;
             color: #fff;
-            padding: 0 20px;
+            padding: 12px;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 15px;
+            cursor: pointer;
+            width: 100%;
+            transition: 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .add-form .btn-add:active {
+            transform: scale(0.97);
+        }
+
+        .add-form .btn-add:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .login-prompt {
+            text-align: center;
+            padding: 30px 20px;
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            border: 2px dashed var(--border);
+        }
+
+        .login-prompt i {
+            font-size: 48px;
+            color: var(--primary);
+            opacity: 0.5;
+            margin-bottom: 12px;
+        }
+
+        .login-prompt h3 {
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .login-prompt p {
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+
+        .login-prompt .btn-login-prompt {
+            margin-top: 12px;
+            background: var(--primary);
+            border: none;
+            color: #fff;
+            padding: 10px 30px;
             border-radius: 60px;
             font-weight: 600;
-            font-size: 14px;
             cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            white-space: nowrap;
-            transition: 0.2s;
         }
 
-        .input-group button:active {
-            transform: scale(0.96);
-        }
-
-        /* MEDIA LIST */
-        .media-list {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            margin-top: 10px;
-        }
-
-        .media-item {
-            background: var(--input-bg);
-            border-radius: 14px;
-            padding: 12px 14px;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            cursor: pointer;
-            transition: 0.2s;
-            border: 1px solid transparent;
-            position: relative;
-        }
-
-        .media-item:hover {
-            border-color: var(--primary);
-            background: var(--item-hover);
-        }
-
-        .media-item .thumb {
-            width: 60px;
-            height: 60px;
-            border-radius: 10px;
-            background: var(--card-bg);
-            display: flex;
+        /* ===== LOGIN MODAL ===== */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.6);
+            backdrop-filter: blur(4px);
+            display: none;
             align-items: center;
             justify-content: center;
-            font-size: 24px;
-            color: var(--primary);
-            flex-shrink: 0;
-            overflow: hidden;
-            position: relative;
+            z-index: 1000;
+            padding: 20px;
         }
 
-        .media-item .thumb img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .media-item .info {
-            flex: 1;
-            min-width: 0;
-        }
-
-        .media-item .info .title {
-            font-weight: 500;
-            font-size: 14px;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        .media-item .info .sub {
-            font-size: 12px;
-            color: var(--text-secondary);
+        .modal-overlay.show {
             display: flex;
-            align-items: center;
-            gap: 6px;
         }
 
-        .media-item .info .sub i {
-            font-size: 10px;
+        .modal-box {
+            background: var(--card-bg);
+            border-radius: 24px;
+            max-width: 380px;
+            width: 100%;
+            padding: 32px 24px;
+            animation: modalIn 0.3s ease;
         }
 
-        .media-item .user-tag {
-            font-size: 10px;
-            padding: 2px 10px;
-            border-radius: 30px;
-            background: var(--user-badge);
-            color: #fff;
-            font-weight: 500;
+        @keyframes modalIn {
+            0% { transform: scale(0.9); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
         }
 
-        .media-item .user-tag.admin {
-            background: var(--admin-badge);
+        .modal-box .logo-wrap {
+            text-align: center;
+            margin-bottom: 24px;
         }
 
-        .media-item .delete-btn {
-            background: none;
+        .modal-box .logo-wrap i {
+            font-size: 40px;
+            color: var(--primary);
+            background: var(--input-bg);
+            padding: 14px;
+            border-radius: 50%;
+        }
+
+        .modal-box .logo-wrap h2 {
+            font-size: 24px;
+            margin-top: 8px;
+        }
+
+        .modal-box input {
+            width: 100%;
+            padding: 14px 16px;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            background: var(--input-bg);
+            color: var(--text);
+            font-size: 14px;
+            margin-bottom: 12px;
+            outline: none;
+        }
+
+        .modal-box input:focus {
+            border-color: var(--primary);
+        }
+
+        .modal-box .btn-login-modal {
+            width: 100%;
+            padding: 14px;
+            background: var(--primary);
             border: none;
-            color: #d9534f;
+            color: #fff;
+            border-radius: 12px;
+            font-weight: 600;
             font-size: 16px;
             cursor: pointer;
-            padding: 6px;
-            border-radius: 50%;
-            transition: 0.2s;
-            opacity: 0.5;
         }
 
-        .media-item .delete-btn:hover {
-            opacity: 1;
-            background: rgba(217, 83, 79, 0.1);
-        }
-
-        .empty-state {
+        .modal-box .login-error-modal {
+            color: #d9534f;
+            font-size: 13px;
             text-align: center;
-            padding: 40px 20px;
-            color: var(--text-secondary);
+            margin-bottom: 10px;
+            display: none;
         }
 
-        .empty-state i {
-            font-size: 48px;
-            opacity: 0.3;
-            margin-bottom: 12px;
-        }
-
-        /* PLAYER BOX */
-        .player-box {
-            background: var(--input-bg);
-            border-radius: 16px;
-            overflow: hidden;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.04);
-            margin-top: 12px;
-            aspect-ratio: 16 / 9;
-            position: relative;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 100%;
-        }
-
-        .player-box.portrait {
-            aspect-ratio: 9 / 16;
-            max-height: 400px;
-        }
-
-        .player-box iframe {
-            width: 100%;
-            height: 100%;
+        .modal-box .close-modal {
+            position: absolute;
+            top: 12px;
+            right: 16px;
+            background: none;
             border: none;
-        }
-
-        .player-box .placeholder-icon {
-            color: var(--placeholder);
-            font-size: 48px;
-            opacity: 0.3;
-        }
-
-        .audio-player-box {
-            background: var(--input-bg);
-            border-radius: 16px;
-            padding: 16px;
-            margin-top: 12px;
-        }
-
-        .audio-player-box audio {
-            width: 100%;
-            border-radius: 40px;
-            background: var(--card-bg);
-        }
-
-        .audio-info {
-            display: flex;
-            align-items: center;
-            gap: 14px;
-            margin-bottom: 12px;
-        }
-
-        .audio-info i {
-            font-size: 36px;
-            color: var(--primary);
-            background: var(--card-bg);
-            padding: 12px;
-            border-radius: 16px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
-        }
-
-        .audio-info div {
-            font-weight: 500;
-            font-size: 14px;
-        }
-
-        .audio-info small {
+            font-size: 24px;
             color: var(--text-secondary);
-            font-weight: 400;
-            font-size: 12px;
-            display: block;
+            cursor: pointer;
         }
 
-        /* NAVBAR */
+        .modal-box { position: relative; }
+
+        /* ===== NAVBAR ===== */
         .bottom-nav {
             background: var(--nav-bg);
             border-top: 1px solid var(--border);
@@ -524,11 +568,11 @@
             background: transparent;
             border: none;
             color: var(--text-secondary);
-            font-size: 11px;
+            font-size: 10px;
             font-weight: 500;
             gap: 1px;
             cursor: pointer;
-            padding: 4px 10px;
+            padding: 4px 12px;
             border-radius: 30px;
             transition: 0.2s;
         }
@@ -540,71 +584,19 @@
         .nav-item.active {
             color: var(--primary);
             background: rgba(45, 125, 70, 0.08);
-            padding: 4px 14px;
+            padding: 4px 16px;
         }
 
-        /* SETTINGS */
-        .settings-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 14px 0;
-            border-bottom: 1px solid var(--border);
-        }
-
-        .settings-item:last-child {
-            border-bottom: none;
-        }
-
-        .settings-item span {
-            font-weight: 500;
-        }
-
-        .settings-item small {
-            color: var(--text-secondary);
-        }
-
-        .toggle-btn {
-            background: var(--input-bg);
-            border: 1px solid var(--border);
-            border-radius: 40px;
-            padding: 6px 14px;
-            font-size: 13px;
-            cursor: pointer;
-            color: var(--text);
-        }
-
-        .logout-btn {
-            background: #d9534f;
+        .nav-item .nav-badge {
+            background: var(--primary);
             color: #fff;
-            border: none;
-            padding: 14px;
-            border-radius: 60px;
-            font-weight: 700;
-            width: 100%;
-            margin-top: 20px;
-            font-size: 16px;
-            cursor: pointer;
+            font-size: 9px;
+            padding: 1px 6px;
+            border-radius: 30px;
+            margin-left: 2px;
         }
 
-        .logout-btn:active {
-            transform: scale(0.97);
-        }
-
-        .admin-info {
-            background: rgba(45, 125, 70, 0.1);
-            border-left: 4px solid var(--primary);
-            padding: 12px 16px;
-            border-radius: 12px;
-            margin-bottom: 16px;
-            font-size: 13px;
-        }
-
-        .admin-info strong {
-            color: var(--primary);
-        }
-
-        /* TOAST */
+        /* ===== TOAST ===== */
         .toast {
             position: fixed;
             bottom: 90px;
@@ -629,11 +621,27 @@
             pointer-events: auto;
         }
 
-        .tab-content::-webkit-scrollbar {
-            width: 4px;
+        /* ===== EMPTY STATE ===== */
+        .empty-feed {
+            text-align: center;
+            padding: 50px 20px;
+            color: var(--text-secondary);
         }
-        .tab-content::-webkit-scrollbar-track {
-            background: transparent;
+
+        .empty-feed i {
+            font-size: 56px;
+            opacity: 0.2;
+            margin-bottom: 12px;
+        }
+
+        .empty-feed h3 {
+            font-weight: 600;
+            color: var(--text);
+        }
+
+        /* SCROLL */
+        .tab-content::-webkit-scrollbar {
+            width: 3px;
         }
         .tab-content::-webkit-scrollbar-thumb {
             background: var(--border);
@@ -641,144 +649,110 @@
         }
 
         @media (max-width: 480px) {
-            #app { border-radius: 24px; min-height: 660px; }
-            .input-group input { min-width: 100px; font-size: 12px; }
-            .media-item .thumb { width: 50px; height: 50px; }
+            #app { border-radius: 20px; min-height: 680px; }
+            .feed-container { padding: 10px; gap: 14px; }
+            .feed-title { font-size: 14px; }
         }
     </style>
 </head>
 <body>
     <div id="app">
-        <!-- LOGIN -->
-        <div id="loginPage">
-            <div class="logo-wrap">
-                <i class="fas fa-leaf"></i>
-                <h1>Cah Angon</h1>
-                <p>Media Publik · Share & Play</p>
+        <!-- HEADER -->
+        <div class="app-header">
+            <h2><i class="fas fa-leaf"></i> Cah Angon</h2>
+            <div class="header-actions">
+                <button class="header-btn" id="themeToggle" onclick="toggleTheme()">
+                    <i class="fas fa-moon"></i>
+                </button>
+                <button class="header-btn" id="authBtn" onclick="toggleAuth()">
+                    <i class="fas fa-user"></i> <span id="authLabel">Login</span>
+                </button>
             </div>
-            <form id="loginForm">
-                <div class="login-error" id="loginError">Email atau password salah</div>
-                <input type="email" id="emailInput" placeholder="Email" required>
-                <input type="password" id="passwordInput" placeholder="Password" required>
-                <button type="submit"><i class="fas fa-arrow-right"></i> Masuk</button>
-                <a href="#" class="forgot-link" onclick="toast('Hubungi admin untuk reset password')">Lupa Password?</a>
-                <div class="login-info">
-                    <i class="fas fa-users"></i> Semua pengguna bisa melihat & menambahkan media
-                </div>
-            </form>
         </div>
 
-        <!-- MAIN APP -->
-        <div id="mainApp">
-            <div class="app-header">
-                <h2><i class="fas fa-leaf"></i> Cah Angon</h2>
-                <div class="header-right">
-                    <span class="admin-badge-header" id="roleBadge">User</span>
-                    <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()"><i class="fas fa-moon"></i></button>
+        <!-- CONTENT -->
+        <div class="tab-content" id="tabContent">
+            <!-- FEED / BERANDA -->
+            <div class="tab-pane active" id="tabFeed">
+                <div class="feed-container" id="feedContainer">
+                    <!-- Feed akan di-render di sini -->
                 </div>
             </div>
 
-            <div class="tab-content" id="tabContent">
-                <!-- HOME -->
-                <div class="tab-pane active" id="tabHome">
-                    <div class="pane-title"><i class="fas fa-home"></i> Beranda</div>
-                    <div class="admin-info" id="adminInfo" style="display:none;">
-                        <i class="fas fa-crown" style="color:var(--primary);"></i>
-                        <strong>Anda adalah Admin</strong> — Anda dapat menghapus media apapun yang ditambahkan oleh user lain.
-                    </div>
-                    <div style="display:grid; gap:10px; background:var(--input-bg); padding:16px; border-radius:16px; margin-bottom:16px;">
-                        <div><i class="fas fa-video" style="color:var(--primary);"></i> <strong>Video</strong> <small style="color:var(--text-secondary);">(YouTube 16:9)</small></div>
-                        <div><i class="fas fa-mobile-alt" style="color:var(--primary);"></i> <strong>Reels</strong> <small style="color:var(--text-secondary);">(TikTok/FB 9:16)</small></div>
-                        <div><i class="fas fa-music" style="color:var(--primary);"></i> <strong>Audio</strong> <small style="color:var(--text-secondary);">(MP3/SoundCloud/Spotify)</small></div>
-                        <small style="color:var(--text-secondary);margin-top:4px;">Semua media yang ditambahkan bisa dilihat oleh semua pengguna.</small>
-                    </div>
-                    <div style="background:var(--input-bg); padding:14px; border-radius:14px;">
-                        <strong>Total Media Publik</strong>
-                        <div id="totalMediaCount" style="font-size:28px; font-weight:700; color:var(--primary);">0</div>
-                    </div>
-                </div>
-
-                <!-- VIDEO -->
-                <div class="tab-pane" id="tabVideo">
+            <!-- TAMBAH VIDEO -->
+            <div class="tab-pane" id="tabAddVideo">
+                <div class="add-container">
                     <div class="pane-title">
-                        <i class="fab fa-youtube"></i> Video 
+                        <i class="fab fa-youtube" style="color:#ff0000;"></i> Tambah Video
                         <span class="count-badge" id="videoCount">0</span>
                     </div>
-                    <div class="input-group">
-                        <input type="text" id="videoLink" placeholder="https://www.youtube.com/watch?v=xxx">
-                        <button onclick="addVideo()"><i class="fas fa-plus"></i> Tambah</button>
+                    <div id="videoAddForm">
+                        <!-- akan diisi berdasarkan login status -->
                     </div>
-                    <div class="media-list" id="videoList"></div>
-                    <div class="player-box" id="videoPlayer">
-                        <i class="fas fa-film placeholder-icon"></i>
-                    </div>
-                </div>
-
-                <!-- REELS -->
-                <div class="tab-pane" id="tabReels">
-                    <div class="pane-title">
-                        <i class="fab fa-tiktok"></i> Reels
-                        <span class="count-badge" id="reelsCount">0</span>
-                    </div>
-                    <div class="input-group">
-                        <input type="text" id="reelsLink" placeholder="https://www.tiktok.com/@user/video/...">
-                        <button onclick="addReels()"><i class="fas fa-plus"></i> Tambah</button>
-                    </div>
-                    <div class="media-list" id="reelsList"></div>
-                    <div class="player-box portrait" id="reelsPlayer">
-                        <i class="fas fa-mobile-alt placeholder-icon"></i>
-                    </div>
-                </div>
-
-                <!-- AUDIO -->
-                <div class="tab-pane" id="tabAudio">
-                    <div class="pane-title">
-                        <i class="fas fa-headphones"></i> Audio
-                        <span class="count-badge" id="audioCount">0</span>
-                    </div>
-                    <div class="input-group">
-                        <input type="text" id="audioLink" placeholder="Link MP3 / SoundCloud / Spotify">
-                        <button onclick="addAudio()"><i class="fas fa-plus"></i> Tambah</button>
-                    </div>
-                    <div class="media-list" id="audioList"></div>
-                    <div class="audio-player-box" id="audioPlayerBox">
-                        <div class="audio-info">
-                            <i class="fas fa-compact-disc"></i>
-                            <div>
-                                <span id="audioTitle">Pilih audio dari daftar</span>
-                                <small id="audioSource">Belum ada yang diputar</small>
-                            </div>
-                        </div>
-                        <audio id="audioElement" controls style="width:100%;"></audio>
-                    </div>
-                </div>
-
-                <!-- SETTINGS -->
-                <div class="tab-pane" id="tabSettings">
-                    <div class="pane-title"><i class="fas fa-cog"></i> Pengaturan</div>
-                    <div class="settings-item"><span><i class="fas fa-user"></i> Role</span> <span id="userRoleDisplay">User</span></div>
-                    <div class="settings-item"><span><i class="fas fa-envelope"></i> Email</span> <span id="userEmailDisplay">-</span></div>
-                    <div class="settings-item"><span><i class="fas fa-adjust"></i> Tema</span> <button class="toggle-btn" onclick="toggleTheme()">Ganti</button></div>
-                    <div class="settings-item"><span><i class="fas fa-bell"></i> Notifikasi</span> <button class="toggle-btn" id="notifToggle" onclick="toggleNotif()">On</button></div>
-                    <div class="settings-item"><span><i class="fas fa-info-circle"></i> Versi</span> <span>v1.0.0</span></div>
-                    <div style="margin-top:12px; background:var(--input-bg); padding:14px; border-radius:14px;">
-                        <strong>Tentang</strong>
-                        <p style="font-size:13px; color:var(--text-secondary); margin-top:6px;">
-                            Cah Angon — media publik. Semua pengguna bisa menambahkan dan melihat media. 
-                            Admin memiliki hak hapus untuk semua konten.
-                        </p>
-                    </div>
-                    <button class="logout-btn" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Keluar</button>
                 </div>
             </div>
 
-            <!-- BOTTOM NAV -->
-            <div class="bottom-nav">
-                <button class="nav-item active" data-tab="tabHome"><i class="fas fa-home"></i> Beranda</button>
-                <button class="nav-item" data-tab="tabVideo"><i class="fab fa-youtube"></i> Video</button>
-                <button class="nav-item" data-tab="tabReels"><i class="fab fa-tiktok"></i> Reels</button>
-                <button class="nav-item" data-tab="tabAudio"><i class="fas fa-headphones"></i> Audio</button>
-                <button class="nav-item" data-tab="tabSettings"><i class="fas fa-cog"></i> Pengaturan</button>
+            <!-- TAMBAH REELS -->
+            <div class="tab-pane" id="tabAddReels">
+                <div class="add-container">
+                    <div class="pane-title">
+                        <i class="fab fa-tiktok"></i> Tambah Reels
+                        <span class="count-badge" id="reelsCount">0</span>
+                    </div>
+                    <div id="reelsAddForm">
+                        <!-- akan diisi berdasarkan login status -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAMBAH AUDIO -->
+            <div class="tab-pane" id="tabAddAudio">
+                <div class="add-container">
+                    <div class="pane-title">
+                        <i class="fas fa-headphones" style="color:#1db954;"></i> Tambah Audio
+                        <span class="count-badge" id="audioCount">0</span>
+                    </div>
+                    <div id="audioAddForm">
+                        <!-- akan diisi berdasarkan login status -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- BOTTOM NAV -->
+        <div class="bottom-nav">
+            <button class="nav-item active" data-tab="tabFeed">
+                <i class="fas fa-home"></i> Beranda
+            </button>
+            <button class="nav-item" data-tab="tabAddVideo">
+                <i class="fab fa-youtube"></i> Video
+            </button>
+            <button class="nav-item" data-tab="tabAddReels">
+                <i class="fab fa-tiktok"></i> Reels
+            </button>
+            <button class="nav-item" data-tab="tabAddAudio">
+                <i class="fas fa-headphones"></i> Audio
+            </button>
+        </div>
+    </div>
+
+    <!-- LOGIN MODAL -->
+    <div class="modal-overlay" id="loginModal">
+        <div class="modal-box">
+            <button class="close-modal" onclick="closeLoginModal()">&times;</button>
+            <div class="logo-wrap">
+                <i class="fas fa-leaf"></i>
+                <h2>Cah Angon</h2>
+                <p style="font-size:13px; color:var(--text-secondary);">Login untuk menambahkan media</p>
+            </div>
+            <div class="login-error-modal" id="loginErrorModal">Email atau password salah</div>
+            <input type="email" id="modalEmail" placeholder="Email" value="dpemburu456@gmail.com">
+            <input type="password" id="modalPassword" placeholder="Password" value="cahangon123">
+            <button class="btn-login-modal" onclick="handleModalLogin()">
+                <i class="fas fa-arrow-right"></i> Masuk
+            </button>
+            <div style="text-align:center;margin-top:12px;font-size:12px;color:var(--text-secondary);">
+                Admin: dpemburu456@gmail.com / cahangon123
             </div>
         </div>
     </div>
@@ -787,35 +761,28 @@
     <div id="toast" class="toast"></div>
 
     <script>
-        // ---- GLOBAL STATE ----
+        // ======================== GLOBAL STATE ========================
         let currentUser = null;
         let isAdmin = false;
         let darkMode = false;
-        let notifOn = true;
-
-        // Data publik - semua user melihat data yang sama
-        let videoData = [];
-        let reelsData = [];
-        let audioData = [];
+        let feedData = [];
+        let nextId = 1;
 
         // DOM refs
-        const loginPage = document.getElementById('loginPage');
-        const mainApp = document.getElementById('mainApp');
-        const loginForm = document.getElementById('loginForm');
-        const emailInput = document.getElementById('emailInput');
-        const passwordInput = document.getElementById('passwordInput');
-        const loginError = document.getElementById('loginError');
-        const userEmailDisplay = document.getElementById('userEmailDisplay');
-        const userRoleDisplay = document.getElementById('userRoleDisplay');
-        const roleBadge = document.getElementById('roleBadge');
-        const adminInfo = document.getElementById('adminInfo');
+        const feedContainer = document.getElementById('feedContainer');
+        const videoAddForm = document.getElementById('videoAddForm');
+        const reelsAddForm = document.getElementById('reelsAddForm');
+        const audioAddForm = document.getElementById('audioAddForm');
+        const authLabel = document.getElementById('authLabel');
+        const authBtn = document.getElementById('authBtn');
+        const loginModal = document.getElementById('loginModal');
         const toastEl = document.getElementById('toast');
 
-        // ---- ADMIN CREDENTIALS ----
+        // ======================== ADMIN CREDENTIALS ========================
         const ADMIN_EMAIL = 'dpemburu456@gmail.com';
         const ADMIN_PASS = 'cahangon123';
 
-        // ---- TOAST ----
+        // ======================== TOAST ========================
         function toast(msg, isError = false) {
             toastEl.textContent = msg;
             toastEl.style.background = isError ? '#d9534f' : 'var(--toast-bg)';
@@ -825,56 +792,91 @@
             toastEl._hide = setTimeout(() => toastEl.classList.remove('show'), 3000);
         }
 
-        // ---- LOGIN ----
-        function handleLogin(e) {
-            e.preventDefault();
-            const email = emailInput.value.trim();
-            const pass = passwordInput.value.trim();
+        // ======================== AUTH ========================
+        function toggleAuth() {
+            if (currentUser) {
+                logout();
+            } else {
+                openLoginModal();
+            }
+        }
+
+        function openLoginModal() {
+            loginModal.classList.add('show');
+            document.getElementById('modalEmail').focus();
+        }
+
+        function closeLoginModal() {
+            loginModal.classList.remove('show');
+        }
+
+        function handleModalLogin() {
+            const email = document.getElementById('modalEmail').value.trim();
+            const pass = document.getElementById('modalPassword').value.trim();
+            const errorEl = document.getElementById('loginErrorModal');
 
             if (!email || !pass) {
-                loginError.style.display = 'block';
-                loginError.textContent = 'Email dan password wajib diisi';
+                errorEl.style.display = 'block';
+                errorEl.textContent = 'Email dan password wajib diisi';
                 return;
             }
             if (!email.includes('@')) {
-                loginError.style.display = 'block';
-                loginError.textContent = 'Email tidak valid';
+                errorEl.style.display = 'block';
+                errorEl.textContent = 'Email tidak valid';
                 return;
             }
             if (pass.length < 6) {
-                loginError.style.display = 'block';
-                loginError.textContent = 'Password minimal 6 karakter';
+                errorEl.style.display = 'block';
+                errorEl.textContent = 'Password minimal 6 karakter';
                 return;
             }
 
             // Cek admin
             if (email === ADMIN_EMAIL && pass === ADMIN_PASS) {
-                loginError.style.display = 'none';
+                errorEl.style.display = 'none';
                 isAdmin = true;
                 currentUser = { email, role: 'admin' };
                 sessionStorage.setItem('cahangon_user', btoa(JSON.stringify(currentUser)));
-                showApp();
-                toast('Selamat datang Admin!');
+                closeLoginModal();
+                updateAuthUI();
+                renderAddForms();
+                toast('Selamat datang Admin! 👑');
                 return;
             }
 
-            // User biasa - semua email selain admin dianggap user
+            // User biasa
             if (pass.length >= 6) {
-                loginError.style.display = 'none';
+                errorEl.style.display = 'none';
                 isAdmin = false;
                 currentUser = { email, role: 'user' };
                 sessionStorage.setItem('cahangon_user', btoa(JSON.stringify(currentUser)));
-                showApp();
+                closeLoginModal();
+                updateAuthUI();
+                renderAddForms();
                 toast(`Selamat datang, ${email.split('@')[0]}!`);
             } else {
-                loginError.style.display = 'block';
-                loginError.textContent = 'Password minimal 6 karakter';
+                errorEl.style.display = 'block';
+                errorEl.textContent = 'Password minimal 6 karakter';
             }
         }
 
-        loginForm.addEventListener('submit', handleLogin);
+        // Enter key on modal
+        document.getElementById('modalPassword').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') handleModalLogin();
+        });
+        document.getElementById('modalEmail').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') handleModalLogin();
+        });
 
-        // ---- SESSION ----
+        function logout() {
+            sessionStorage.removeItem('cahangon_user');
+            currentUser = null;
+            isAdmin = false;
+            updateAuthUI();
+            renderAddForms();
+            toast('Anda telah keluar');
+        }
+
         function checkSession() {
             const raw = sessionStorage.getItem('cahangon_user');
             if (raw) {
@@ -883,81 +885,77 @@
                     if (data && data.email) {
                         currentUser = data;
                         isAdmin = data.role === 'admin';
-                        showApp();
-                        return;
                     }
                 } catch (_) {}
             }
-            loginPage.style.display = 'flex';
-            mainApp.style.display = 'none';
+            updateAuthUI();
         }
 
-        function showApp() {
-            loginPage.style.display = 'none';
-            mainApp.style.display = 'flex';
-            
-            // Update UI berdasarkan role
-            if (isAdmin) {
-                roleBadge.textContent = '👑 Admin';
-                roleBadge.style.background = 'var(--admin-badge)';
-                userRoleDisplay.textContent = 'Admin 👑';
-                adminInfo.style.display = 'block';
+        function updateAuthUI() {
+            if (currentUser) {
+                authLabel.textContent = currentUser.email.split('@')[0];
+                authBtn.innerHTML = `<i class="fas fa-sign-out-alt"></i> <span id="authLabel">${currentUser.email.split('@')[0]}</span>`;
             } else {
-                roleBadge.textContent = 'User';
-                roleBadge.style.background = 'var(--user-badge)';
-                userRoleDisplay.textContent = 'User';
-                adminInfo.style.display = 'none';
+                authLabel.textContent = 'Login';
+                authBtn.innerHTML = `<i class="fas fa-user"></i> <span id="authLabel">Login</span>`;
             }
-            
-            if (currentUser) userEmailDisplay.textContent = currentUser.email;
-            
-            // Load data dari localStorage (PUBLIK)
-            loadAllData();
-            
-            // Set theme
-            const savedTheme = localStorage.getItem('cahangon_theme');
-            if (savedTheme === 'dark') {
-                document.body.classList.add('dark-mode');
-                darkMode = true;
-                document.getElementById('themeToggle').innerHTML = '<i class="fas fa-sun"></i>';
-            }
-            
-            const savedNotif = localStorage.getItem('cahangon_notif');
-            if (savedNotif === 'off') {
-                notifOn = false;
-                document.getElementById('notifToggle').textContent = 'Off';
-            }
-            
-            switchTab('tabHome');
-            renderAll();
         }
 
-        // ---- DATA MANAGEMENT (PUBLIK) ----
-        function loadAllData() {
+        // ======================== FEED DATA ========================
+        function loadFeed() {
             try {
-                videoData = JSON.parse(localStorage.getItem('cahangon_public_videos')) || [];
-                reelsData = JSON.parse(localStorage.getItem('cahangon_public_reels')) || [];
-                audioData = JSON.parse(localStorage.getItem('cahangon_public_audio')) || [];
+                const data = JSON.parse(localStorage.getItem('cahangon_feed'));
+                if (data && Array.isArray(data)) {
+                    feedData = data;
+                    nextId = feedData.length > 0 ? Math.max(...feedData.map(f => f.id)) + 1 : 1;
+                } else {
+                    feedData = [];
+                    nextId = 1;
+                }
             } catch(e) {
-                videoData = []; reelsData = []; audioData = [];
+                feedData = [];
+                nextId = 1;
             }
         }
 
-        function saveAllData() {
-            localStorage.setItem('cahangon_public_videos', JSON.stringify(videoData));
-            localStorage.setItem('cahangon_public_reels', JSON.stringify(reelsData));
-            localStorage.setItem('cahangon_public_audio', JSON.stringify(audioData));
+        function saveFeed() {
+            localStorage.setItem('cahangon_feed', JSON.stringify(feedData));
+            renderFeed();
             updateCounts();
         }
 
-        function updateCounts() {
-            document.getElementById('videoCount').textContent = videoData.length;
-            document.getElementById('reelsCount').textContent = reelsData.length;
-            document.getElementById('audioCount').textContent = audioData.length;
-            document.getElementById('totalMediaCount').textContent = videoData.length + reelsData.length + audioData.length;
+        // ======================== ADD MEDIA ========================
+        function addFeedItem(type, url, title, addedBy) {
+            const item = {
+                id: nextId++,
+                type: type, // 'video', 'reels', 'audio'
+                url: url,
+                title: title || getDefaultTitle(type, url),
+                addedBy: addedBy || (currentUser ? currentUser.email : 'anonymous'),
+                addedAt: Date.now(),
+                isAdmin: isAdmin
+            };
+
+            // Extract video ID for YouTube
+            if (type === 'video') {
+                const vidId = extractVideoId(url);
+                if (vidId) item.videoId = vidId;
+            }
+
+            feedData.unshift(item);
+            saveFeed();
+            toast('Media berhasil ditambahkan ke Beranda! 🎉');
         }
 
-        // ---- EXTRACT VIDEO ID ----
+        function getDefaultTitle(type, url) {
+            switch(type) {
+                case 'video': return 'Video YouTube';
+                case 'reels': return url.includes('tiktok') ? 'TikTok Reels' : 'Facebook Reels';
+                case 'audio': return 'Audio';
+                default: return 'Media';
+            }
+        }
+
         function extractVideoId(url) {
             const patterns = [
                 /(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&?#]+)/,
@@ -970,267 +968,279 @@
             return null;
         }
 
-        function getVideoTitle(url) {
-            const id = extractVideoId(url);
-            return id ? `YouTube Video ${id.substring(0, 8)}` : 'Video';
-        }
-
-        function getReelsTitle(url) {
-            if (url.includes('tiktok.com')) return 'TikTok Reels';
-            if (url.includes('facebook.com') || url.includes('fb.watch')) return 'Facebook Reels';
-            return 'Reels';
-        }
-
-        function getAudioTitle(url) {
-            if (url.includes('soundcloud.com')) return 'SoundCloud Audio';
-            if (url.includes('spotify.com')) return 'Spotify Audio';
-            if (url.includes('.mp3')) return 'MP3 Audio';
-            return 'Audio';
-        }
-
-        // ---- ADD MEDIA (PUBLIK) ----
-        function addVideo() {
-            const input = document.getElementById('videoLink');
-            const url = input.value.trim();
-            if (!url) { toast('Masukkan link YouTube', true); return; }
-            const id = extractVideoId(url);
-            if (!id) { toast('Link YouTube tidak valid', true); return; }
-            
-            const existing = videoData.find(v => v.url === url);
-            if (existing) { toast('Video sudah ada di daftar', true); return; }
-            
-            videoData.push({
-                url: url,
-                id: id,
-                title: getVideoTitle(url),
-                addedBy: currentUser ? currentUser.email : 'unknown',
-                addedAt: Date.now()
-            });
-            saveAllData();
-            renderVideoList();
-            input.value = '';
-            toast('Video berhasil ditambahkan ke publik!');
-        }
-
-        function addReels() {
-            const input = document.getElementById('reelsLink');
-            const url = input.value.trim();
-            if (!url) { toast('Masukkan link TikTok / Reels', true); return; }
-            if (!url.includes('tiktok.com') && !url.includes('facebook.com') && !url.includes('fb.watch')) {
-                toast('Hanya mendukung TikTok dan Facebook Reels', true);
-                return;
-            }
-            
-            const existing = reelsData.find(r => r.url === url);
-            if (existing) { toast('Reels sudah ada di daftar', true); return; }
-            
-            reelsData.push({
-                url: url,
-                title: getReelsTitle(url),
-                addedBy: currentUser ? currentUser.email : 'unknown',
-                addedAt: Date.now()
-            });
-            saveAllData();
-            renderReelsList();
-            input.value = '';
-            toast('Reels berhasil ditambahkan ke publik!');
-        }
-
-        function addAudio() {
-            const input = document.getElementById('audioLink');
-            const url = input.value.trim();
-            if (!url) { toast('Masukkan link audio', true); return; }
-            
-            const existing = audioData.find(a => a.url === url);
-            if (existing) { toast('Audio sudah ada di daftar', true); return; }
-            
-            audioData.push({
-                url: url,
-                title: getAudioTitle(url),
-                addedBy: currentUser ? currentUser.email : 'unknown',
-                addedAt: Date.now()
-            });
-            saveAllData();
-            renderAudioList();
-            input.value = '';
-            toast('Audio berhasil ditambahkan ke publik!');
-        }
-
-        // ---- DELETE MEDIA (Admin bisa hapus semua, user hanya bisa hapus milik sendiri) ----
-        function canDelete(addedBy) {
-            if (isAdmin) return true;
-            return addedBy === currentUser.email;
-        }
-
-        function deleteVideo(index) {
-            if (!canDelete(videoData[index].addedBy)) {
-                toast('Anda hanya bisa menghapus video yang Anda tambahkan sendiri!', true);
-                return;
-            }
-            videoData.splice(index, 1);
-            saveAllData();
-            renderVideoList();
-            toast('Video dihapus');
-        }
-
-        function deleteReels(index) {
-            if (!canDelete(reelsData[index].addedBy)) {
-                toast('Anda hanya bisa menghapus reels yang Anda tambahkan sendiri!', true);
-                return;
-            }
-            reelsData.splice(index, 1);
-            saveAllData();
-            renderReelsList();
-            toast('Reels dihapus');
-        }
-
-        function deleteAudio(index) {
-            if (!canDelete(audioData[index].addedBy)) {
-                toast('Anda hanya bisa menghapus audio yang Anda tambahkan sendiri!', true);
-                return;
-            }
-            audioData.splice(index, 1);
-            saveAllData();
-            renderAudioList();
-            toast('Audio dihapus');
-        }
-
-        // ---- RENDER LISTS ----
-        function renderVideoList() {
-            const container = document.getElementById('videoList');
-            if (videoData.length === 0) {
-                container.innerHTML = `<div class="empty-state"><i class="fas fa-video"></i><p>Belum ada video publik</p><small style="color:var(--text-secondary);">Tambahkan video pertama!</small></div>`;
-                return;
-            }
-            container.innerHTML = videoData.map((v, i) => {
-                const isOwner = v.addedBy === currentUser.email;
-                const showDelete = isAdmin || isOwner;
-                return `
-                <div class="media-item" onclick="playVideoItem(${i})">
-                    <div class="thumb">
-                        <img src="https://img.youtube.com/vi/${v.id}/mqdefault.jpg" alt="thumbnail" onerror="this.style.display='none'">
-                        <i class="fas fa-play" style="position:absolute;font-size:20px;opacity:0.6;"></i>
+        // ======================== RENDER FEED ========================
+        function renderFeed() {
+            if (feedData.length === 0) {
+                feedContainer.innerHTML = `
+                    <div class="empty-feed">
+                        <i class="fas fa-leaf"></i>
+                        <h3>Belum ada media</h3>
+                        <p style="font-size:13px;">Jadilah yang pertama menambahkan video, reels, atau audio!</p>
+                        <p style="font-size:12px;margin-top:8px;color:var(--placeholder);">
+                            <i class="fas fa-plus-circle"></i> Klik tab Video / Reels / Audio untuk menambah
+                        </p>
                     </div>
-                    <div class="info">
-                        <div class="title">${v.title}</div>
-                        <div class="sub">
-                            <i class="fab fa-youtube"></i> YouTube
-                            <span class="user-tag ${isAdmin ? 'admin' : ''}">${isAdmin ? '👑 Admin' : v.addedBy.split('@')[0]}</span>
+                `;
+                return;
+            }
+
+            feedContainer.innerHTML = feedData.map(item => {
+                const isOwner = item.addedBy === (currentUser ? currentUser.email : null);
+                const canDelete = isAdmin || isOwner;
+                const username = item.addedBy.split('@')[0];
+                const isAdminUser = item.isAdmin || (item.addedBy === ADMIN_EMAIL);
+                const timeAgo = getTimeAgo(item.addedAt);
+                
+                let mediaHtml = '';
+                if (item.type === 'video' && item.videoId) {
+                    mediaHtml = `
+                        <div class="feed-media">
+                            <iframe src="https://www.youtube.com/embed/${item.videoId}?autoplay=1&rel=0" 
+                                    allow="autoplay; encrypted-media" allowfullscreen></iframe>
                         </div>
-                    </div>
-                    ${showDelete ? `<button class="delete-btn" onclick="event.stopPropagation();deleteVideo(${i})"><i class="fas fa-trash"></i></button>` : ''}
-                </div>
-            `}).join('');
-            updateCounts();
-        }
-
-        function renderReelsList() {
-            const container = document.getElementById('reelsList');
-            if (reelsData.length === 0) {
-                container.innerHTML = `<div class="empty-state"><i class="fas fa-mobile-alt"></i><p>Belum ada reels publik</p><small style="color:var(--text-secondary);">Tambahkan reels pertama!</small></div>`;
-                return;
-            }
-            container.innerHTML = reelsData.map((r, i) => {
-                const isOwner = r.addedBy === currentUser.email;
-                const showDelete = isAdmin || isOwner;
-                const platform = r.url.includes('tiktok') ? 'TikTok' : 'Facebook';
-                const icon = r.url.includes('tiktok') ? 'fab fa-tiktok' : 'fab fa-facebook';
-                return `
-                <div class="media-item" onclick="playReelsItem(${i})">
-                    <div class="thumb">
-                        <i class="${icon}"></i>
-                    </div>
-                    <div class="info">
-                        <div class="title">${r.title}</div>
-                        <div class="sub">
-                            <i class="fas fa-mobile-alt"></i> ${platform}
-                            <span class="user-tag ${isAdmin ? 'admin' : ''}">${isAdmin ? '👑 Admin' : r.addedBy.split('@')[0]}</span>
+                    `;
+                } else if (item.type === 'reels') {
+                    let embedUrl = '';
+                    if (item.url.includes('tiktok.com')) {
+                        const match = item.url.match(/\/video\/(\d+)/);
+                        if (match) {
+                            embedUrl = `https://www.tiktok.com/embed/v2/${match[1]}`;
+                        }
+                    } else if (item.url.includes('facebook.com') || item.url.includes('fb.watch')) {
+                        embedUrl = `https://www.facebook.com/plugins/video.php?href=${encodeURIComponent(item.url)}&autoplay=1`;
+                    }
+                    mediaHtml = `
+                        <div class="feed-media portrait">
+                            ${embedUrl ? `<iframe src="${embedUrl}" allow="autoplay; encrypted-media" allowfullscreen style="width:100%;height:100%;"></iframe>` : 
+                                `<i class="fas fa-mobile-alt placeholder-icon"></i>`}
                         </div>
-                    </div>
-                    ${showDelete ? `<button class="delete-btn" onclick="event.stopPropagation();deleteReels(${i})"><i class="fas fa-trash"></i></button>` : ''}
-                </div>
-            `}).join('');
-            updateCounts();
-        }
-
-        function renderAudioList() {
-            const container = document.getElementById('audioList');
-            if (audioData.length === 0) {
-                container.innerHTML = `<div class="empty-state"><i class="fas fa-music"></i><p>Belum ada audio publik</p><small style="color:var(--text-secondary);">Tambahkan audio pertama!</small></div>`;
-                return;
-            }
-            container.innerHTML = audioData.map((a, i) => {
-                const isOwner = a.addedBy === currentUser.email;
-                const showDelete = isAdmin || isOwner;
-                return `
-                <div class="media-item" onclick="playAudioItem(${i})">
-                    <div class="thumb">
-                        <i class="fas fa-music"></i>
-                    </div>
-                    <div class="info">
-                        <div class="title">${a.title}</div>
-                        <div class="sub">
-                            <i class="fas fa-headphones"></i> Audio
-                            <span class="user-tag ${isAdmin ? 'admin' : ''}">${isAdmin ? '👑 Admin' : a.addedBy.split('@')[0]}</span>
+                    `;
+                } else if (item.type === 'audio') {
+                    mediaHtml = `
+                        <div class="feed-audio">
+                            <div class="feed-audio-info">
+                                <i class="fas fa-compact-disc"></i>
+                                <div>${item.title}</div>
+                            </div>
+                            <audio controls src="${item.url}"></audio>
                         </div>
-                    </div>
-                    ${showDelete ? `<button class="delete-btn" onclick="event.stopPropagation();deleteAudio(${i})"><i class="fas fa-trash"></i></button>` : ''}
-                </div>
-            `}).join('');
-            updateCounts();
-        }
-
-        // ---- PLAY MEDIA ----
-        function playVideoItem(index) {
-            const video = videoData[index];
-            const embedUrl = `https://www.youtube.com/embed/${video.id}?autoplay=1&rel=0`;
-            const container = document.getElementById('videoPlayer');
-            container.innerHTML = `<iframe src="${embedUrl}" allow="autoplay; encrypted-media" allowfullscreen></iframe>`;
-            toast(`Memutar: ${video.title}`);
-        }
-
-        function playReelsItem(index) {
-            const reels = reelsData[index];
-            let embedUrl = '';
-            if (reels.url.includes('tiktok.com')) {
-                const match = reels.url.match(/\/video\/(\d+)/);
-                if (match) {
-                    embedUrl = `https://www.tiktok.com/embed/v2/${match[1]}`;
-                } else {
-                    toast('Tidak dapat memutar TikTok ini', true);
-                    return;
+                    `;
                 }
-            } else {
-                embedUrl = `https://www.facebook.com/plugins/video.php?href=${encodeURIComponent(reels.url)}&autoplay=1`;
+
+                const typeLabel = item.type === 'video' ? 'Video' : item.type === 'reels' ? 'Reels' : 'Audio';
+                const typeIcon = item.type === 'video' ? 'fab fa-youtube' : 
+                                 item.type === 'reels' ? 'fab fa-tiktok' : 'fas fa-headphones';
+                const typeClass = item.type === 'video' ? 'video' : item.type === 'reels' ? 'reels' : 'audio';
+
+                return `
+                    <div class="feed-item">
+                        <div class="feed-header">
+                            <div class="feed-user">
+                                <div class="feed-avatar" style="background:${getColorFromEmail(item.addedBy)}">
+                                    ${username.charAt(0).toUpperCase()}
+                                </div>
+                                <div class="feed-user-info">
+                                    <div class="feed-username">
+                                        ${username}
+                                        ${isAdminUser ? '<span class="admin-badge">👑 Admin</span>' : ''}
+                                    </div>
+                                    <div class="feed-time">${timeAgo}</div>
+                                </div>
+                            </div>
+                            <span class="feed-type-badge ${typeClass}">
+                                <i class="${typeIcon}"></i> ${typeLabel}
+                            </span>
+                        </div>
+                        <div class="feed-title">${item.title}</div>
+                        ${mediaHtml}
+                        <div class="feed-actions">
+                            <button onclick="toast('💬 Fitur komentar segera hadir!')">
+                                <i class="far fa-comment"></i> Komentar
+                            </button>
+                            <button onclick="shareMedia('${item.url}')">
+                                <i class="fas fa-share-alt"></i> Bagikan
+                            </button>
+                            ${canDelete ? `<button class="delete-btn" onclick="deleteFeedItem(${item.id})"><i class="fas fa-trash"></i> Hapus</button>` : ''}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function getTimeAgo(timestamp) {
+            const diff = Date.now() - timestamp;
+            const minutes = Math.floor(diff / 60000);
+            if (minutes < 1) return 'Baru saja';
+            if (minutes < 60) return `${minutes} menit lalu`;
+            const hours = Math.floor(minutes / 60);
+            if (hours < 24) return `${hours} jam lalu`;
+            const days = Math.floor(hours / 24);
+            if (days < 7) return `${days} hari lalu`;
+            return new Date(timestamp).toLocaleDateString('id-ID');
+        }
+
+        function getColorFromEmail(email) {
+            const colors = ['#2d7d46', '#4CAF50', '#2196F3', '#9C27B0', '#FF5722', '#00BCD4', '#FF9800'];
+            let hash = 0;
+            for (let i = 0; i < email.length; i++) {
+                hash = email.charCodeAt(i) + ((hash << 5) - hash);
             }
-            const container = document.getElementById('reelsPlayer');
-            container.innerHTML = `<iframe src="${embedUrl}" allow="autoplay; encrypted-media" allowfullscreen style="width:100%;height:100%;"></iframe>`;
-            toast(`Memutar: ${reels.title}`);
+            return colors[Math.abs(hash) % colors.length];
         }
 
-        function playAudioItem(index) {
-            const audio = audioData[index];
-            const audioEl = document.getElementById('audioElement');
-            audioEl.src = audio.url;
-            audioEl.load();
-            audioEl.play().then(() => {
-                document.getElementById('audioTitle').textContent = audio.title;
-                document.getElementById('audioSource').textContent = `Ditambahkan oleh: ${audio.addedBy}`;
-                toast(`Memutar: ${audio.title}`);
-            }).catch(() => {
-                toast('Gagal memutar audio. Cek link.', true);
-            });
+        function shareMedia(url) {
+            if (navigator.share) {
+                navigator.share({ title: 'Cah Angon', text: 'Cek media ini!', url: url });
+            } else {
+                navigator.clipboard.writeText(url).then(() => {
+                    toast('Link disalin ke clipboard!');
+                }).catch(() => {
+                    toast('Salin link: ' + url);
+                });
+            }
         }
 
-        // ---- RENDER ALL ----
-        function renderAll() {
-            renderVideoList();
-            renderReelsList();
-            renderAudioList();
-            updateCounts();
+        // ======================== DELETE ========================
+        function deleteFeedItem(id) {
+            const item = feedData.find(f => f.id === id);
+            if (!item) return;
+            
+            const isOwner = item.addedBy === (currentUser ? currentUser.email : null);
+            if (!isAdmin && !isOwner) {
+                toast('Anda tidak bisa menghapus ini!', true);
+                return;
+            }
+            
+            if (confirm('Hapus media ini?')) {
+                feedData = feedData.filter(f => f.id !== id);
+                saveFeed();
+                toast('Media dihapus');
+            }
         }
 
-        // ---- NAVIGATION ----
+        // ======================== RENDER ADD FORMS ========================
+        function renderAddForms() {
+            const loggedIn = !!currentUser;
+            
+            // Video form
+            videoAddForm.innerHTML = loggedIn ? `
+                <div class="add-form">
+                    <label>📹 Link YouTube</label>
+                    <input type="text" id="videoUrlInput" placeholder="https://www.youtube.com/watch?v=xxx">
+                    <label>📝 Judul Video</label>
+                    <textarea id="videoTitleInput" placeholder="Tulis judul videonya..."></textarea>
+                    <button class="btn-add" onclick="submitVideo()">
+                        <i class="fas fa-plus-circle"></i> Tambahkan ke Beranda
+                    </button>
+                </div>
+                <div style="font-size:12px;color:var(--text-secondary);text-align:center;">
+                    <i class="fas fa-globe"></i> Media akan tampil di Beranda untuk semua orang
+                </div>
+            ` : getLoginPrompt();
+            
+            // Reels form
+            reelsAddForm.innerHTML = loggedIn ? `
+                <div class="add-form">
+                    <label>📱 Link Reels (TikTok / Facebook)</label>
+                    <input type="text" id="reelsUrlInput" placeholder="https://www.tiktok.com/@user/video/...">
+                    <label>📝 Judul Reels</label>
+                    <textarea id="reelsTitleInput" placeholder="Tulis judul reelsnya..."></textarea>
+                    <button class="btn-add" onclick="submitReels()">
+                        <i class="fas fa-plus-circle"></i> Tambahkan ke Beranda
+                    </button>
+                </div>
+                <div style="font-size:12px;color:var(--text-secondary);text-align:center;">
+                    <i class="fas fa-globe"></i> Media akan tampil di Beranda untuk semua orang
+                </div>
+            ` : getLoginPrompt();
+            
+            // Audio form
+            audioAddForm.innerHTML = loggedIn ? `
+                <div class="add-form">
+                    <label>🎵 Link Audio (MP3 / SoundCloud / Spotify)</label>
+                    <input type="text" id="audioUrlInput" placeholder="https://example.com/audio.mp3">
+                    <label>📝 Judul Audio</label>
+                    <textarea id="audioTitleInput" placeholder="Tulis judul audionya..."></textarea>
+                    <button class="btn-add" onclick="submitAudio()">
+                        <i class="fas fa-plus-circle"></i> Tambahkan ke Beranda
+                    </button>
+                </div>
+                <div style="font-size:12px;color:var(--text-secondary);text-align:center;">
+                    <i class="fas fa-globe"></i> Media akan tampil di Beranda untuk semua orang
+                </div>
+            ` : getLoginPrompt();
+        }
+
+        function getLoginPrompt() {
+            return `
+                <div class="login-prompt">
+                    <i class="fas fa-lock"></i>
+                    <h3>Login untuk menambahkan media</h3>
+                    <p>Hanya pengguna terdaftar yang bisa membagikan video, reels, dan audio.</p>
+                    <button class="btn-login-prompt" onclick="openLoginModal()">
+                        <i class="fas fa-sign-in-alt"></i> Login Sekarang
+                    </button>
+                </div>
+            `;
+        }
+
+        // ======================== SUBMIT HANDLERS ========================
+        function submitVideo() {
+            const url = document.getElementById('videoUrlInput').value.trim();
+            const title = document.getElementById('videoTitleInput').value.trim() || 'Video YouTube';
+            if (!url) { toast('Masukkan link YouTube!', true); return; }
+            if (!extractVideoId(url)) { toast('Link YouTube tidak valid!', true); return; }
+            addFeedItem('video', url, title, currentUser.email);
+            document.getElementById('videoUrlInput').value = '';
+            document.getElementById('videoTitleInput').value = '';
+            switchTab('tabFeed');
+        }
+
+        function submitReels() {
+            const url = document.getElementById('reelsUrlInput').value.trim();
+            const title = document.getElementById('reelsTitleInput').value.trim() || 'Reels';
+            if (!url) { toast('Masukkan link Reels!', true); return; }
+            if (!url.includes('tiktok.com') && !url.includes('facebook.com') && !url.includes('fb.watch')) {
+                toast('Hanya TikTok & Facebook Reels!', true);
+                return;
+            }
+            addFeedItem('reels', url, title, currentUser.email);
+            document.getElementById('reelsUrlInput').value = '';
+            document.getElementById('reelsTitleInput').value = '';
+            switchTab('tabFeed');
+        }
+
+        function submitAudio() {
+            const url = document.getElementById('audioUrlInput').value.trim();
+            const title = document.getElementById('audioTitleInput').value.trim() || 'Audio';
+            if (!url) { toast('Masukkan link audio!', true); return; }
+            addFeedItem('audio', url, title, currentUser.email);
+            document.getElementById('audioUrlInput').value = '';
+            document.getElementById('audioTitleInput').value = '';
+            switchTab('tabFeed');
+        }
+
+        // Enter key support for add forms
+        document.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                const active = document.activeElement;
+                if (active && active.id === 'videoUrlInput') submitVideo();
+                else if (active && active.id === 'reelsUrlInput') submitReels();
+                else if (active && active.id === 'audioUrlInput') submitAudio();
+            }
+        });
+
+        // ======================== COUNTS ========================
+        function updateCounts() {
+            const videos = feedData.filter(f => f.type === 'video').length;
+            const reels = feedData.filter(f => f.type === 'reels').length;
+            const audios = feedData.filter(f => f.type === 'audio').length;
+            document.getElementById('videoCount').textContent = videos;
+            document.getElementById('reelsCount').textContent = reels;
+            document.getElementById('audioCount').textContent = audios;
+        }
+
+        // ======================== NAVIGATION ========================
         document.querySelectorAll('.nav-item').forEach(btn => {
             btn.addEventListener('click', function() {
                 const tabId = this.dataset.tab;
@@ -1247,57 +1257,50 @@
             document.querySelectorAll('.nav-item').forEach(b => {
                 b.classList.toggle('active', b.dataset.tab === tabId);
             });
-            if (tabId === 'tabVideo') renderVideoList();
-            else if (tabId === 'tabReels') renderReelsList();
-            else if (tabId === 'tabAudio') renderAudioList();
-            else if (tabId === 'tabHome') updateCounts();
+            if (tabId === 'tabFeed') renderFeed();
         }
 
-        // ---- THEME ----
+        // ======================== THEME ========================
         function toggleTheme() {
             darkMode = !darkMode;
             document.body.classList.toggle('dark-mode', darkMode);
-            const icon = document.getElementById('themeToggle');
-            icon.innerHTML = darkMode ? '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>';
+            const icon = document.getElementById('themeToggle').querySelector('i');
+            icon.className = darkMode ? 'fas fa-sun' : 'fas fa-moon';
             localStorage.setItem('cahangon_theme', darkMode ? 'dark' : 'light');
             toast(darkMode ? 'Mode gelap' : 'Mode terang');
         }
 
-        // ---- NOTIF ----
-        function toggleNotif() {
-            notifOn = !notifOn;
-            const btn = document.getElementById('notifToggle');
-            btn.textContent = notifOn ? 'On' : 'Off';
-            localStorage.setItem('cahangon_notif', notifOn ? 'on' : 'off');
-            toast(notifOn ? 'Notifikasi On' : 'Notifikasi Off');
+        // ======================== INIT ========================
+        function init() {
+            // Theme
+            const savedTheme = localStorage.getItem('cahangon_theme');
+            if (savedTheme === 'dark') {
+                darkMode = true;
+                document.body.classList.add('dark-mode');
+                document.getElementById('themeToggle').querySelector('i').className = 'fas fa-sun';
+            }
+            
+            checkSession();
+            loadFeed();
+            renderFeed();
+            renderAddForms();
+            updateCounts();
+            
+            // Jika belum login, tampilkan prompt
+            if (!currentUser) {
+                setTimeout(() => {
+                    toast('👋 Login untuk menambahkan media!', false);
+                }, 1000);
+            }
         }
 
-        // ---- LOGOUT ----
-        function logout() {
-            sessionStorage.removeItem('cahangon_user');
-            currentUser = null;
-            isAdmin = false;
-            loginPage.style.display = 'flex';
-            mainApp.style.display = 'none';
-            loginForm.reset();
-            toast('Anda telah keluar');
-            // Reset players
-            document.getElementById('videoPlayer').innerHTML = '<i class="fas fa-film placeholder-icon"></i>';
-            document.getElementById('reelsPlayer').innerHTML = '<i class="fas fa-mobile-alt placeholder-icon"></i>';
-            document.getElementById('audioElement').src = '';
-            document.getElementById('audioTitle').textContent = 'Pilih audio dari daftar';
-            document.getElementById('audioSource').textContent = 'Belum ada yang diputar';
-        }
+        // Close modal on overlay click
+        loginModal.addEventListener('click', (e) => {
+            if (e.target === loginModal) closeLoginModal();
+        });
 
-        // ---- INIT ----
-        checkSession();
-
-        // Enter key support
-        document.getElementById('videoLink').addEventListener('keypress', (e) => { if(e.key === 'Enter') addVideo(); });
-        document.getElementById('reelsLink').addEventListener('keypress', (e) => { if(e.key === 'Enter') addReels(); });
-        document.getElementById('audioLink').addEventListener('keypress', (e) => { if(e.key === 'Enter') addAudio(); });
-
-        console.log('Cah Angon Publik siap!');
+        init();
+        console.log('🌿 Cah Angon Feed siap!');
     </script>
 </body>
 </html>
