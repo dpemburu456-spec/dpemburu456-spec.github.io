@@ -1,0 +1,839 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Cah Angon · Pemutar Media</title>
+    <!-- Fonts & Icons -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+            transition: background 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+        }
+
+        :root {
+            --primary: #2d7d46;
+            --primary-light: #4CAF50;
+            --primary-dark: #1e5a32;
+            --bg: #f0f6f0;
+            --card-bg: #ffffff;
+            --text: #1e2a1e;
+            --text-secondary: #3f4f3f;
+            --border: #d4e0d4;
+            --shadow: 0 8px 24px rgba(0, 20, 0, 0.08);
+            --radius: 18px;
+            --nav-bg: #ffffff;
+            --input-bg: #f5faf5;
+            --placeholder: #7a8f7a;
+            --toast-bg: #1e2a1e;
+        }
+
+        .dark-mode {
+            --bg: #121812;
+            --card-bg: #1e2a1e;
+            --text: #e8f0e8;
+            --text-secondary: #b0c8b0;
+            --border: #2f402f;
+            --shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+            --nav-bg: #1a261a;
+            --input-bg: #263226;
+            --placeholder: #8aa08a;
+            --toast-bg: #e8f0e8;
+            --toast-text: #121812;
+        }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 12px;
+        }
+
+        /* APP CONTAINER */
+        #app {
+            max-width: 420px;
+            width: 100%;
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            position: relative;
+            min-height: 700px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* LOGIN */
+        #loginPage {
+            padding: 40px 28px 32px;
+            background: linear-gradient(145deg, #1e5a32, #2d7d46);
+            min-height: 600px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            border-radius: var(--radius);
+        }
+
+        .logo-wrap {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .logo-wrap i {
+            font-size: 56px;
+            color: #b8e0b8;
+            background: rgba(255, 255, 255, 0.12);
+            padding: 18px;
+            border-radius: 60px;
+            margin-bottom: 12px;
+            display: inline-block;
+        }
+
+        .logo-wrap h1 {
+            font-weight: 700;
+            font-size: 32px;
+            color: #fff;
+            letter-spacing: -0.5px;
+        }
+
+        .logo-wrap p {
+            color: #c8e0c8;
+            font-size: 14px;
+            font-weight: 400;
+            margin-top: 4px;
+        }
+
+        #loginForm input {
+            width: 100%;
+            padding: 16px 18px;
+            border-radius: 60px;
+            border: none;
+            background: rgba(255, 255, 255, 0.88);
+            font-size: 15px;
+            margin-bottom: 14px;
+            color: #1e2a1e;
+            outline: 2px solid transparent;
+            transition: 0.2s;
+        }
+
+        #loginForm input:focus {
+            outline: 2px solid #b8e0b8;
+            background: #fff;
+        }
+
+        #loginForm button {
+            width: 100%;
+            padding: 16px;
+            border: none;
+            border-radius: 60px;
+            background: #f5faf5;
+            color: #1e5a32;
+            font-weight: 700;
+            font-size: 17px;
+            margin-top: 6px;
+            cursor: pointer;
+            transition: 0.2s;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        #loginForm button:active {
+            transform: scale(0.97);
+        }
+
+        .forgot-link {
+            display: block;
+            text-align: center;
+            margin-top: 20px;
+            color: #c8e0c8;
+            font-size: 14px;
+            text-decoration: none;
+            font-weight: 400;
+        }
+
+        .login-error {
+            color: #ffd4d4;
+            background: rgba(200, 50, 50, 0.2);
+            padding: 10px;
+            border-radius: 30px;
+            text-align: center;
+            font-size: 14px;
+            margin-bottom: 12px;
+            display: none;
+        }
+
+        /* MAIN APP */
+        #mainApp {
+            display: none;
+            flex-direction: column;
+            min-height: 700px;
+        }
+
+        /* HEADER */
+        .app-header {
+            padding: 20px 20px 8px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .app-header h2 {
+            font-size: 20px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .app-header h2 i {
+            color: var(--primary);
+        }
+
+        .theme-toggle {
+            background: var(--input-bg);
+            border: none;
+            border-radius: 40px;
+            padding: 8px 14px;
+            font-size: 18px;
+            color: var(--text);
+            cursor: pointer;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+        }
+
+        /* TAB CONTENT */
+        .tab-content {
+            flex: 1;
+            padding: 18px 18px 80px;
+            overflow-y: auto;
+        }
+
+        .tab-pane {
+            display: none;
+            animation: fadeUp 0.3s ease;
+        }
+
+        .tab-pane.active {
+            display: block;
+        }
+
+        @keyframes fadeUp {
+            0% { opacity: 0.4; transform: translateY(8px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        .pane-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .input-group {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 18px;
+            flex-wrap: wrap;
+        }
+
+        .input-group input {
+            flex: 1;
+            padding: 14px 16px;
+            border-radius: 60px;
+            border: 1px solid var(--border);
+            background: var(--input-bg);
+            color: var(--text);
+            font-size: 14px;
+            outline: none;
+            min-width: 160px;
+        }
+
+        .input-group input::placeholder {
+            color: var(--placeholder);
+        }
+
+        .input-group button {
+            background: var(--primary);
+            border: none;
+            color: #fff;
+            padding: 0 22px;
+            border-radius: 60px;
+            font-weight: 600;
+            font-size: 15px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            white-space: nowrap;
+            transition: 0.2s;
+        }
+
+        .input-group button:active {
+            transform: scale(0.96);
+        }
+
+        .player-box {
+            background: var(--input-bg);
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.04);
+            margin-top: 6px;
+            aspect-ratio: 16 / 9;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .player-box.portrait {
+            aspect-ratio: 9 / 16;
+            max-height: 460px;
+        }
+
+        .player-box iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        .player-box .placeholder-icon {
+            color: var(--placeholder);
+            font-size: 48px;
+            opacity: 0.3;
+        }
+
+        .audio-player {
+            background: var(--input-bg);
+            border-radius: 16px;
+            padding: 18px 16px;
+            margin-top: 6px;
+        }
+
+        .audio-player audio {
+            width: 100%;
+            border-radius: 40px;
+            background: var(--card-bg);
+        }
+
+        .audio-cover {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 12px;
+        }
+
+        .audio-cover i {
+            font-size: 44px;
+            color: var(--primary);
+            background: var(--card-bg);
+            padding: 14px;
+            border-radius: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+        }
+
+        .audio-cover div {
+            font-weight: 500;
+        }
+
+        .audio-cover small {
+            color: var(--text-secondary);
+            font-weight: 400;
+            font-size: 13px;
+        }
+
+        /* NAVBAR */
+        .bottom-nav {
+            background: var(--nav-bg);
+            border-top: 1px solid var(--border);
+            display: flex;
+            justify-content: space-around;
+            padding: 8px 6px 14px;
+            position: sticky;
+            bottom: 0;
+            backdrop-filter: blur(4px);
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background: transparent;
+            border: none;
+            color: var(--text-secondary);
+            font-size: 12px;
+            font-weight: 500;
+            gap: 2px;
+            cursor: pointer;
+            padding: 4px 12px;
+            border-radius: 30px;
+            transition: 0.2s;
+        }
+
+        .nav-item i {
+            font-size: 22px;
+        }
+
+        .nav-item.active {
+            color: var(--primary);
+            background: rgba(45, 125, 70, 0.08);
+            padding: 4px 16px;
+        }
+
+        /* SETTINGS */
+        .settings-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 14px 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .settings-item:last-child {
+            border-bottom: none;
+        }
+
+        .settings-item span {
+            font-weight: 500;
+        }
+
+        .settings-item small {
+            color: var(--text-secondary);
+        }
+
+        .toggle-btn {
+            background: var(--input-bg);
+            border: 1px solid var(--border);
+            border-radius: 40px;
+            padding: 6px 14px;
+            font-size: 13px;
+            cursor: pointer;
+            color: var(--text);
+        }
+
+        .logout-btn {
+            background: #d9534f;
+            color: #fff;
+            border: none;
+            padding: 14px;
+            border-radius: 60px;
+            font-weight: 700;
+            width: 100%;
+            margin-top: 24px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .logout-btn:active {
+            transform: scale(0.97);
+        }
+
+        /* TOAST */
+        .toast {
+            position: fixed;
+            bottom: 90px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--toast-bg);
+            color: var(--bg);
+            padding: 12px 24px;
+            border-radius: 60px;
+            font-size: 14px;
+            font-weight: 500;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+            opacity: 0;
+            pointer-events: none;
+            transition: 0.3s ease;
+            z-index: 999;
+            max-width: 90%;
+        }
+
+        .toast.show {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .spinner {
+            display: inline-block;
+            width: 24px;
+            height: 24px;
+            border: 3px solid rgba(255,255,255,0.2);
+            border-radius: 50%;
+            border-top: 3px solid #fff;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        /* responsive */
+        @media (max-width: 480px) {
+            #app { border-radius: 28px; min-height: 680px; }
+            .input-group input { min-width: 120px; }
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <!-- LOGIN -->
+        <div id="loginPage">
+            <div class="logo-wrap">
+                <i class="fas fa-leaf"></i>
+                <h1>Cah Angon</h1>
+                <p>Pemutar Media Serba Bisa</p>
+            </div>
+            <form id="loginForm">
+                <div class="login-error" id="loginError">Email atau password salah</div>
+                <input type="email" id="emailInput" placeholder="Email" value="dpemburu456@gmail.com" required>
+                <input type="password" id="passwordInput" placeholder="Password" value="cahangon123" required>
+                <button type="submit"><i class="fas fa-arrow-right"></i> Masuk</button>
+                <a href="#" class="forgot-link" onclick="toast('Hubungi admin untuk reset password')">Lupa Password?</a>
+            </form>
+        </div>
+
+        <!-- MAIN APP -->
+        <div id="mainApp">
+            <div class="app-header">
+                <h2><i class="fas fa-leaf"></i> Cah Angon</h2>
+                <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()"><i class="fas fa-moon"></i></button>
+            </div>
+
+            <div class="tab-content" id="tabContent">
+                <!-- BERANDA -->
+                <div class="tab-pane active" id="tabHome">
+                    <div class="pane-title"><i class="fas fa-home"></i> Beranda</div>
+                    <p style="color:var(--text-secondary); margin-bottom: 20px;">Salin link dari YouTube, TikTok, atau audio untuk diputar.</p>
+                    <div style="display:grid; gap:12px; background:var(--input-bg); padding:16px; border-radius:16px;">
+                        <div><i class="fas fa-video" style="color:var(--primary);"></i> <strong>Video 16:9</strong></div>
+                        <div><i class="fas fa-mobile-alt" style="color:var(--primary);"></i> <strong>Reels 9:16</strong></div>
+                        <div><i class="fas fa-music" style="color:var(--primary);"></i> <strong>Audio</strong></div>
+                        <small style="color:var(--text-secondary);">Pilih tab di bawah untuk memutar media.</small>
+                    </div>
+                </div>
+
+                <!-- VIDEO -->
+                <div class="tab-pane" id="tabVideo">
+                    <div class="pane-title"><i class="fab fa-youtube"></i> Video (16:9)</div>
+                    <div class="input-group">
+                        <input type="text" id="videoLink" placeholder="https://www.youtube.com/watch?v=..." value="https://www.youtube.com/watch?v=dQw4w9WgXcQ">
+                        <button onclick="playVideo()"><i class="fas fa-play"></i> Putar</button>
+                    </div>
+                    <div class="player-box" id="videoPlayer">
+                        <i class="fas fa-film placeholder-icon"></i>
+                    </div>
+                </div>
+
+                <!-- REELS -->
+                <div class="tab-pane" id="tabReels">
+                    <div class="pane-title"><i class="fab fa-tiktok"></i> Reels (9:16)</div>
+                    <div class="input-group">
+                        <input type="text" id="reelsLink" placeholder="https://www.tiktok.com/@user/video/...">
+                        <button onclick="playReels()"><i class="fas fa-play"></i> Putar</button>
+                    </div>
+                    <div class="player-box portrait" id="reelsPlayer">
+                        <i class="fas fa-mobile-alt placeholder-icon"></i>
+                    </div>
+                </div>
+
+                <!-- AUDIO -->
+                <div class="tab-pane" id="tabAudio">
+                    <div class="pane-title"><i class="fas fa-headphones"></i> Audio</div>
+                    <div class="input-group">
+                        <input type="text" id="audioLink" placeholder="Link MP3 atau embed SoundCloud / Spotify" value="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3">
+                        <button onclick="playAudio()"><i class="fas fa-play"></i> Putar</button>
+                    </div>
+                    <div class="audio-player" id="audioPlayer">
+                        <div class="audio-cover">
+                            <i class="fas fa-compact-disc"></i>
+                            <div><span id="audioTitle">Putar audio</span><br><small id="audioSource">MP3 / streaming</small></div>
+                        </div>
+                        <audio id="audioElement" controls style="width:100%;"></audio>
+                    </div>
+                </div>
+
+                <!-- SETTINGS -->
+                <div class="tab-pane" id="tabSettings">
+                    <div class="pane-title"><i class="fas fa-cog"></i> Pengaturan</div>
+                    <div class="settings-item"><span><i class="fas fa-envelope"></i> Email</span> <span id="userEmailDisplay">-</span></div>
+                    <div class="settings-item"><span><i class="fas fa-adjust"></i> Tema</span> <button class="toggle-btn" onclick="toggleTheme()">Ganti</button></div>
+                    <div class="settings-item"><span><i class="fas fa-bell"></i> Notifikasi</span> <button class="toggle-btn" id="notifToggle" onclick="toggleNotif()">On</button></div>
+                    <div class="settings-item"><span><i class="fas fa-info-circle"></i> Versi</span> <span>v1.0.0</span></div>
+                    <div style="margin-top:12px; background:var(--input-bg); padding:16px; border-radius:16px;">
+                        <strong>Tentang</strong>
+                        <p style="font-size:14px; color:var(--text-secondary); margin-top:6px;">Cah Angon — pemutar media dari link. YouTube, TikTok, Reels, dan audio. Dibuat dengan ❤️ untuk kemudahan.</p>
+                    </div>
+                    <button class="logout-btn" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Keluar</button>
+                </div>
+            </div>
+
+            <!-- BOTTOM NAV -->
+            <div class="bottom-nav">
+                <button class="nav-item active" data-tab="tabHome"><i class="fas fa-home"></i> Beranda</button>
+                <button class="nav-item" data-tab="tabVideo"><i class="fab fa-youtube"></i> Video</button>
+                <button class="nav-item" data-tab="tabReels"><i class="fab fa-tiktok"></i> Reels</button>
+                <button class="nav-item" data-tab="tabAudio"><i class="fas fa-headphones"></i> Audio</button>
+                <button class="nav-item" data-tab="tabSettings"><i class="fas fa-cog"></i> Pengaturan</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- TOAST -->
+    <div id="toast" class="toast"></div>
+
+    <script>
+        // ---- GLOBAL STATE ----
+        let currentUser = null;
+        let darkMode = false;
+        let notifOn = true;
+
+        // DOM refs
+        const loginPage = document.getElementById('loginPage');
+        const mainApp = document.getElementById('mainApp');
+        const loginForm = document.getElementById('loginForm');
+        const emailInput = document.getElementById('emailInput');
+        const passwordInput = document.getElementById('passwordInput');
+        const loginError = document.getElementById('loginError');
+        const userEmailDisplay = document.getElementById('userEmailDisplay');
+        const toastEl = document.getElementById('toast');
+
+        // ---- TOAST ----
+        function toast(msg, isError = false) {
+            toastEl.textContent = msg;
+            toastEl.style.background = isError ? '#d9534f' : 'var(--toast-bg)';
+            toastEl.style.color = isError ? '#fff' : 'var(--bg)';
+            toastEl.classList.add('show');
+            clearTimeout(toastEl._hide);
+            toastEl._hide = setTimeout(() => toastEl.classList.remove('show'), 3000);
+        }
+
+        // ---- LOGIN ----
+        function handleLogin(e) {
+            e.preventDefault();
+            const email = emailInput.value.trim();
+            const pass = passwordInput.value.trim();
+
+            // validasi sederhana
+            if (!email || !pass) {
+                loginError.style.display = 'block';
+                loginError.textContent = 'Email dan password wajib diisi';
+                return;
+            }
+            if (!email.includes('@')) {
+                loginError.style.display = 'block';
+                loginError.textContent = 'Email tidak valid';
+                return;
+            }
+            if (pass.length < 6) {
+                loginError.style.display = 'block';
+                loginError.textContent = 'Password minimal 6 karakter';
+                return;
+            }
+
+            // hardcoded admin
+            if (email === 'dpemburu456@gmail.com' && pass === 'cahangon123') {
+                loginError.style.display = 'none';
+                currentUser = { email };
+                sessionStorage.setItem('cahangon_user', btoa(JSON.stringify(currentUser)));
+                showApp();
+                toast('Selamat datang, Cah Angon!');
+            } else {
+                loginError.style.display = 'block';
+                loginError.textContent = 'Email atau password salah';
+            }
+        }
+
+        loginForm.addEventListener('submit', handleLogin);
+
+        // ---- SESSION ----
+        function checkSession() {
+            const raw = sessionStorage.getItem('cahangon_user');
+            if (raw) {
+                try {
+                    const data = JSON.parse(atob(raw));
+                    if (data && data.email) {
+                        currentUser = data;
+                        showApp();
+                        return;
+                    }
+                } catch (_) {}
+            }
+            // jika tidak ada session, tetap di login
+            loginPage.style.display = 'flex';
+            mainApp.style.display = 'none';
+        }
+
+        function showApp() {
+            loginPage.style.display = 'none';
+            mainApp.style.display = 'flex';
+            if (currentUser) userEmailDisplay.textContent = currentUser.email;
+            // load default tab
+            switchTab('tabHome');
+            // set dark mode dari localStorage
+            const savedTheme = localStorage.getItem('cahangon_theme');
+            if (savedTheme === 'dark') {
+                document.body.classList.add('dark-mode');
+                darkMode = true;
+                document.getElementById('themeToggle').innerHTML = '<i class="fas fa-sun"></i>';
+            }
+            // notifikasi state
+            const savedNotif = localStorage.getItem('cahangon_notif');
+            if (savedNotif === 'off') {
+                notifOn = false;
+                document.getElementById('notifToggle').textContent = 'Off';
+            }
+        }
+
+        // ---- NAVIGATION ----
+        document.querySelectorAll('.nav-item').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const tabId = this.dataset.tab;
+                switchTab(tabId);
+                document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+            const target = document.getElementById(tabId);
+            if (target) target.classList.add('active');
+            // update nav active
+            document.querySelectorAll('.nav-item').forEach(b => {
+                b.classList.toggle('active', b.dataset.tab === tabId);
+            });
+        }
+
+        // ---- VIDEO (YouTube) ----
+        function playVideo() {
+            const link = document.getElementById('videoLink').value.trim();
+            if (!link) { toast('Masukkan link YouTube', true); return; }
+            // ekstrak ID
+            let vidId = null;
+            const patterns = [
+                /(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&?#]+)/,
+                /youtube\.com\/embed\/([^&?#]+)/
+            ];
+            for (let p of patterns) {
+                const m = link.match(p);
+                if (m) { vidId = m[1]; break; }
+            }
+            if (!vidId) { toast('Link YouTube tidak valid', true); return; }
+            const embedUrl = `https://www.youtube.com/embed/${vidId}?autoplay=1&rel=0`;
+            const container = document.getElementById('videoPlayer');
+            container.innerHTML = `<iframe src="${embedUrl}" allow="autoplay; encrypted-media" allowfullscreen></iframe>`;
+            toast('Memutar video...');
+        }
+
+        // ---- REELS (TikTok / FB) ----
+        function playReels() {
+            const link = document.getElementById('reelsLink').value.trim();
+            if (!link) { toast('Masukkan link TikTok / Reels', true); return; }
+            // coba pakai oEmbed TikTok (fallback ke iframe langsung)
+            // Untuk kemudahan, kita gunakan embed jika URL mengandung tiktok
+            let embedUrl = '';
+            if (link.includes('tiktok.com')) {
+                // gunakan oEmbed tapi tidak selalu work di client side, kita pakai pendekatan: https://www.tiktok.com/embed/v2/...
+                // pendekatan sederhana: redirect ke embed jika ada video id
+                const match = link.match(/\/video\/(\d+)/);
+                if (match) {
+                    embedUrl = `https://www.tiktok.com/embed/v2/${match[1]}`;
+                } else {
+                    toast('Link TikTok tidak dikenali. Coba format: https://www.tiktok.com/@user/video/123', true);
+                    return;
+                }
+            } else if (link.includes('facebook.com') || link.includes('fb.watch')) {
+                // facebook embed (coba oembed)
+                embedUrl = `https://www.facebook.com/plugins/video.php?href=${encodeURIComponent(link)}&autoplay=1`;
+            } else {
+                toast('Hanya mendukung TikTok dan Facebook Reels', true);
+                return;
+            }
+            const container = document.getElementById('reelsPlayer');
+            container.innerHTML = `<iframe src="${embedUrl}" allow="autoplay; encrypted-media" allowfullscreen style="width:100%;height:100%;"></iframe>`;
+            toast('Memutar Reels...');
+        }
+
+        // ---- AUDIO ----
+        function playAudio() {
+            const link = document.getElementById('audioLink').value.trim();
+            if (!link) { toast('Masukkan link audio', true); return; }
+            const audioEl = document.getElementById('audioElement');
+            // coba set src
+            audioEl.src = link;
+            audioEl.load();
+            audioEl.play().then(() => {
+                document.getElementById('audioTitle').textContent = 'Memutar audio';
+                document.getElementById('audioSource').textContent = link.length > 40 ? link.substring(0, 40)+'...' : link;
+                toast('Memutar audio...');
+            }).catch(() => {
+                toast('Gagal memutar audio. Cek link.', true);
+            });
+        }
+
+        // ---- THEME ----
+        function toggleTheme() {
+            darkMode = !darkMode;
+            document.body.classList.toggle('dark-mode', darkMode);
+            const icon = document.getElementById('themeToggle');
+            icon.innerHTML = darkMode ? '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>';
+            localStorage.setItem('cahangon_theme', darkMode ? 'dark' : 'light');
+            toast(darkMode ? 'Mode gelap' : 'Mode terang');
+        }
+
+        // ---- NOTIF ----
+        function toggleNotif() {
+            notifOn = !notifOn;
+            const btn = document.getElementById('notifToggle');
+            btn.textContent = notifOn ? 'On' : 'Off';
+            localStorage.setItem('cahangon_notif', notifOn ? 'on' : 'off');
+            toast(notifOn ? 'Notifikasi On' : 'Notifikasi Off');
+        }
+
+        // ---- LOGOUT ----
+        function logout() {
+            sessionStorage.removeItem('cahangon_user');
+            currentUser = null;
+            loginPage.style.display = 'flex';
+            mainApp.style.display = 'none';
+            // reset form
+            loginForm.reset();
+            toast('Anda telah keluar');
+            // reset player
+            document.getElementById('videoPlayer').innerHTML = '<i class="fas fa-film placeholder-icon"></i>';
+            document.getElementById('reelsPlayer').innerHTML = '<i class="fas fa-mobile-alt placeholder-icon"></i>';
+            document.getElementById('audioElement').src = '';
+            document.getElementById('audioTitle').textContent = 'Putar audio';
+            document.getElementById('audioSource').textContent = 'MP3 / streaming';
+        }
+
+        // ---- INIT ----
+        checkSession();
+
+        // auto-focus setelah login
+        document.addEventListener('DOMContentLoaded', () => {
+            if (loginPage.style.display !== 'none') {
+                emailInput.focus();
+            }
+        });
+
+        // jika session ada, langsung tampil
+        window.addEventListener('load', () => {
+            if (sessionStorage.getItem('cahangon_user')) {
+                // sudah diproses di checkSession
+            }
+        });
+
+        // demo default video on load? tidak otomatis.
+        console.log('Cah Angon siap!');
+    </script>
+</body>
+  </html>
