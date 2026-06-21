@@ -251,12 +251,37 @@
             position: relative;
             overflow: hidden;
             min-height: 200px;
+            cursor: pointer;
         }
 
         .feed-media iframe {
             width: 100%;
             height: 100%;
             border: none;
+        }
+
+        .feed-media .play-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0,0,0,0.4);
+            transition: 0.3s;
+            cursor: pointer;
+        }
+
+        .feed-media .play-overlay:hover {
+            background: rgba(0,0,0,0.2);
+        }
+
+        .feed-media .play-overlay i {
+            font-size: 48px;
+            color: #fff;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.5);
         }
 
         .feed-media .placeholder-icon {
@@ -736,8 +761,8 @@
         let feedData = [];
         let nextId = 1;
         let currentPlayingIndex = -1;
+        let isPlaying = false;
 
-        // ADMIN CREDENTIALS (TIDAK TAMPAK DI UI)
         const ADMIN_EMAIL = 'dpemburu456@gmail.com';
         const ADMIN_PASS = 'cahangon123';
 
@@ -798,7 +823,6 @@
                 return;
             }
 
-            // Cek admin (credentials tersembunyi di kode)
             if (email === ADMIN_EMAIL && pass === ADMIN_PASS) {
                 errorEl.style.display = 'none';
                 isAdmin = true;
@@ -811,7 +835,6 @@
                 return;
             }
 
-            // User biasa - semua email selain admin dianggap user
             if (pass.length >= 6) {
                 errorEl.style.display = 'none';
                 isAdmin = false;
@@ -839,6 +862,7 @@
             currentUser = null;
             isAdmin = false;
             currentPlayingIndex = -1;
+            isPlaying = false;
             updateAuthUI();
             renderAddForms();
             renderFeed();
@@ -932,10 +956,6 @@
             feedData.unshift(item);
             saveFeed();
             
-            if (feedData.length === 1) {
-                setTimeout(() => playMedia(0), 500);
-            }
-            
             toast('Media berhasil ditambahkan ke Beranda! 🎉');
             return true;
         }
@@ -944,6 +964,7 @@
         function playMedia(index) {
             if (index < 0 || index >= feedData.length) {
                 currentPlayingIndex = -1;
+                isPlaying = false;
                 renderFeed();
                 toast('🏁 Selesai memutar semua media!');
                 return;
@@ -951,6 +972,7 @@
 
             const item = feedData[index];
             currentPlayingIndex = index;
+            isPlaying = true;
             renderFeed();
 
             setTimeout(() => {
@@ -971,43 +993,35 @@
             const container = document.getElementById(`video-${item.id}`);
             if (!container) return;
 
-            let iframe = container.querySelector('iframe');
-            if (!iframe) {
-                iframe = document.createElement('iframe');
-                iframe.setAttribute('allow', 'autoplay; encrypted-media');
-                iframe.setAttribute('allowfullscreen', 'true');
-                container.innerHTML = '';
-                container.appendChild(iframe);
-            }
-
+            // Hapus semua konten di container
+            container.innerHTML = '';
+            
+            // Buat iframe dengan autoplay
+            const iframe = document.createElement('iframe');
+            iframe.setAttribute('allow', 'autoplay; encrypted-media; fullscreen');
+            iframe.setAttribute('allowfullscreen', 'true');
+            iframe.style.width = '100%';
+            iframe.style.height = '100%';
+            iframe.style.border = 'none';
             iframe.src = `https://www.youtube.com/embed/${item.videoId}?autoplay=1&rel=0&enablejsapi=1`;
-
-            // Deteksi akhir video dengan interval
-            let checkEndInterval = setInterval(() => {
-                if (currentPlayingIndex !== index) {
-                    clearInterval(checkEndInterval);
-                    return;
-                }
-
-                const currentIframe = container.querySelector('iframe');
-                if (!currentIframe || !currentIframe.src) {
-                    clearInterval(checkEndInterval);
-                    playNext(index);
-                    return;
-                }
-
-                // Jika sudah lebih dari 5 menit, pindah ke next (asumsi video selesai)
-                if (Date.now() - item._startTime > 300000) { // 5 menit
-                    clearInterval(checkEndInterval);
-                    playNext(index);
-                    return;
-                }
-            }, 5000);
-
-            item._startTime = Date.now();
-            item._checkEndInterval = checkEndInterval;
+            
+            container.appendChild(iframe);
 
             toast(`▶️ Memutar: ${item.title}`);
+
+            // Deteksi akhir video menggunakan interval
+            if (item._checkInterval) clearInterval(item._checkInterval);
+            
+            let startTime = Date.now();
+            item._checkInterval = setInterval(() => {
+                // Jika sudah lebih dari 5 menit, anggap selesai
+                if (Date.now() - startTime > 300000) { // 5 menit
+                    clearInterval(item._checkInterval);
+                    if (currentPlayingIndex === index) {
+                        playNext(index);
+                    }
+                }
+            }, 5000);
         }
 
         function playAudio(item, index) {
@@ -1027,13 +1041,17 @@
             
             audioEl.onended = function() {
                 audioEl.onended = null;
-                playNext(index);
+                if (currentPlayingIndex === index) {
+                    playNext(index);
+                }
             };
 
             audioEl.onerror = function() {
                 toast('Gagal memutar audio, lanjut ke berikutnya...', true);
                 audioEl.onended = null;
-                playNext(index);
+                if (currentPlayingIndex === index) {
+                    playNext(index);
+                }
             };
 
             audioEl.play().then(() => {
@@ -1041,7 +1059,9 @@
             }).catch((err) => {
                 console.error('Audio play error:', err);
                 toast('Gagal memutar audio, lanjut ke berikutnya...', true);
-                playNext(index);
+                if (currentPlayingIndex === index) {
+                    playNext(index);
+                }
             });
         }
 
@@ -1051,9 +1071,10 @@
                 toast(`⏭️ Otomatis ke media berikutnya...`);
                 setTimeout(() => {
                     playMedia(nextIndex);
-                }, 1000);
+                }, 1500);
             } else {
                 currentPlayingIndex = -1;
+                isPlaying = false;
                 renderFeed();
                 toast('🏁 Selesai memutar semua media!');
             }
@@ -1081,13 +1102,18 @@
                 const username = item.addedBy.split('@')[0];
                 const isAdminUser = item.isAdmin || (item.addedBy === ADMIN_EMAIL);
                 const timeAgo = getTimeAgo(item.addedAt);
-                const isPlaying = currentPlayingIndex === index;
+                const isPlayingNow = currentPlayingIndex === index && isPlaying;
                 
                 let mediaHtml = '';
                 if (item.type === 'video' && item.videoId) {
                     mediaHtml = `
                         <div class="feed-media" id="video-${item.id}">
-                            ${isPlaying ? '' : `<iframe src="https://www.youtube.com/embed/${item.videoId}?rel=0" allow="encrypted-media" allowfullscreen></iframe>`}
+                            ${isPlayingNow ? '' : `
+                                <div class="play-overlay" onclick="playMedia(${index})">
+                                    <i class="fas fa-play-circle"></i>
+                                </div>
+                                <iframe src="https://www.youtube.com/embed/${item.videoId}?rel=0" allow="encrypted-media" allowfullscreen></iframe>
+                            `}
                         </div>
                     `;
                 } else if (item.type === 'audio') {
@@ -1098,7 +1124,10 @@
                                 <div>${item.title}</div>
                             </div>
                             <div class="audio-wrapper">
-                                ${isPlaying ? `<audio controls src="${item.url}" style="width:100%;"></audio>` : ''}
+                                ${isPlayingNow ? `<audio controls src="${item.url}" style="width:100%;" autoplay></audio>` : 
+                                `<button onclick="playMedia(${index})" style="padding:10px 20px;background:var(--primary);color:#fff;border:none;border-radius:30px;cursor:pointer;font-weight:600;">
+                                    <i class="fas fa-play"></i> Putar Audio
+                                </button>`}
                             </div>
                         </div>
                     `;
@@ -1108,7 +1137,7 @@
                 const typeIcon = item.type === 'video' ? 'fab fa-youtube' : 'fas fa-headphones';
                 const typeClass = item.type === 'video' ? 'video' : 'audio';
 
-                const playingClass = isPlaying ? 'now-playing' : '';
+                const playingClass = isPlayingNow ? 'now-playing' : '';
 
                 return `
                     <div class="feed-item ${playingClass}" data-index="${index}">
@@ -1132,10 +1161,10 @@
                         <div class="feed-title">${item.title}</div>
                         ${mediaHtml}
                         <div class="feed-actions">
-                            <button onclick="playMedia(${index})">
-                                <i class="fas fa-${isPlaying ? 'pause' : 'play'}"></i> ${isPlaying ? 'Diputar' : 'Putar'}
-                            </button>
-                            ${isPlaying ? '<span class="playing-indicator"><i class="fas fa-circle" style="font-size:8px;color:var(--now-playing);"></i> Sedang diputar</span>' : ''}
+                            ${isPlayingNow ? 
+                                `<span class="playing-indicator"><i class="fas fa-circle" style="font-size:8px;color:var(--now-playing);"></i> Sedang diputar</span>` :
+                                `<button onclick="playMedia(${index})"><i class="fas fa-play"></i> Putar</button>`
+                            }
                             <button onclick="shareMedia('${item.url}')">
                                 <i class="fas fa-share-alt"></i> Bagikan
                             </button>
@@ -1144,19 +1173,6 @@
                     </div>
                 `;
             }).join('');
-
-            if (currentPlayingIndex >= 0 && currentPlayingIndex < feedData.length) {
-                const item = feedData[currentPlayingIndex];
-                if (item.type === 'video') {
-                    const container = document.getElementById(`video-${item.id}`);
-                    if (container) {
-                        const iframe = container.querySelector('iframe');
-                        if (!iframe || !iframe.src || iframe.src.includes('autoplay')) {
-                            playMedia(currentPlayingIndex);
-                        }
-                    }
-                }
-            }
         }
 
         function getTimeAgo(timestamp) {
@@ -1209,6 +1225,7 @@
                 
                 if (currentPlayingIndex === index) {
                     currentPlayingIndex = -1;
+                    isPlaying = false;
                 } else if (currentPlayingIndex > index) {
                     currentPlayingIndex--;
                 }
@@ -1348,14 +1365,6 @@
             renderFeed();
             renderAddForms();
             updateCounts();
-            
-            if (feedData.length > 0 && currentPlayingIndex === -1) {
-                setTimeout(() => {
-                    if (confirm('Mulai putar otomatis dari media pertama?')) {
-                        playMedia(0);
-                    }
-                }, 1500);
-            }
             
             if (!currentUser) {
                 setTimeout(() => {
