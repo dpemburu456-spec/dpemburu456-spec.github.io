@@ -32,7 +32,6 @@
             --placeholder: #7a8f7a;
             --toast-bg: #1e2a1e;
             --admin-badge: #ff6b35;
-            --user-badge: #4CAF50;
             --feed-gap: 16px;
         }
 
@@ -74,7 +73,6 @@
             transition: background 0.3s;
         }
 
-        /* HEADER */
         .app-header {
             padding: 14px 18px 10px;
             display: flex;
@@ -122,7 +120,6 @@
             font-size: 16px;
         }
 
-        /* TAB CONTENT */
         .tab-content {
             flex: 1;
             padding: 0 0 80px 0;
@@ -145,7 +142,6 @@
             100% { opacity: 1; transform: translateY(0); }
         }
 
-        /* ===== FEED ===== */
         .feed-container {
             padding: 12px 14px;
             display: flex;
@@ -228,9 +224,7 @@
         }
 
         .feed-type-badge.video { color: #ff0000; background: #ff000015; }
-        .feed-type-badge.reels { color: #000; background: #00000010; }
         .feed-type-badge.audio { color: #1db954; background: #1db95415; }
-        .dark-mode .feed-type-badge.reels { color: #fff; background: #ffffff15; }
 
         .feed-title {
             padding: 0 14px 8px;
@@ -241,18 +235,14 @@
 
         .feed-media {
             width: 100%;
-            background: var(--input-bg);
+            background: #000;
             aspect-ratio: 16 / 9;
             display: flex;
             align-items: center;
             justify-content: center;
             position: relative;
             overflow: hidden;
-        }
-
-        .feed-media.portrait {
-            aspect-ratio: 9 / 16;
-            max-height: 460px;
+            min-height: 200px;
         }
 
         .feed-media iframe {
@@ -261,46 +251,10 @@
             border: none;
         }
 
-        .feed-media .tiktok-embed-wrap {
-            width: 100%;
-            height: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: #000;
-            position: relative;
-        }
-
-        .feed-media .tiktok-embed-wrap blockquote {
-            width: 100%;
-            height: 100%;
-            margin: 0;
-            padding: 0;
-        }
-
-        .feed-media .tiktok-embed-wrap iframe {
-            width: 100% !important;
-            height: 100% !important;
-        }
-
         .feed-media .placeholder-icon {
             color: var(--placeholder);
             font-size: 48px;
             opacity: 0.3;
-        }
-
-        .feed-media .media-error {
-            padding: 20px;
-            text-align: center;
-            color: var(--text-secondary);
-            font-size: 13px;
-        }
-
-        .feed-media .media-error i {
-            font-size: 32px;
-            display: block;
-            margin-bottom: 8px;
-            opacity: 0.5;
         }
 
         .feed-audio {
@@ -361,25 +315,6 @@
             margin-left: auto;
         }
 
-        .feed-loading {
-            padding: 20px;
-            text-align: center;
-            color: var(--text-secondary);
-        }
-
-        .feed-loading .spinner {
-            display: inline-block;
-            width: 30px;
-            height: 30px;
-            border: 3px solid var(--border);
-            border-top: 3px solid var(--primary);
-            border-radius: 50%;
-            animation: spin 0.8s linear infinite;
-        }
-
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-
-        /* ===== TAB TAMBAH ===== */
         .add-container {
             padding: 16px;
         }
@@ -462,11 +397,6 @@
             transform: scale(0.97);
         }
 
-        .add-form .btn-add:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
-
         .login-prompt {
             text-align: center;
             padding: 30px 20px;
@@ -503,7 +433,6 @@
             cursor: pointer;
         }
 
-        /* ===== LOGIN MODAL ===== */
         .modal-overlay {
             position: fixed;
             top: 0;
@@ -603,7 +532,6 @@
             cursor: pointer;
         }
 
-        /* ===== NAVBAR ===== */
         .bottom-nav {
             background: var(--nav-bg);
             border-top: 1px solid var(--border);
@@ -641,16 +569,6 @@
             padding: 4px 16px;
         }
 
-        .nav-item .nav-badge {
-            background: var(--primary);
-            color: #fff;
-            font-size: 9px;
-            padding: 1px 6px;
-            border-radius: 30px;
-            margin-left: 2px;
-        }
-
-        /* ===== TOAST ===== */
         .toast {
             position: fixed;
             bottom: 90px;
@@ -675,7 +593,6 @@
             pointer-events: auto;
         }
 
-        /* ===== EMPTY STATE ===== */
         .empty-feed {
             text-align: center;
             padding: 50px 20px;
@@ -693,7 +610,6 @@
             color: var(--text);
         }
 
-        /* SCROLL */
         .tab-content::-webkit-scrollbar {
             width: 3px;
         }
@@ -711,7 +627,6 @@
 </head>
 <body>
     <div id="app">
-        <!-- HEADER -->
         <div class="app-header">
             <h2><i class="fas fa-leaf"></i> Cah Angon</h2>
             <div class="header-actions">
@@ -724,13 +639,10 @@
             </div>
         </div>
 
-        <!-- CONTENT -->
         <div class="tab-content" id="tabContent">
-            <!-- FEED / BERANDA -->
+            <!-- FEED -->
             <div class="tab-pane active" id="tabFeed">
-                <div class="feed-container" id="feedContainer">
-                    <!-- Feed akan di-render di sini -->
-                </div>
+                <div class="feed-container" id="feedContainer"></div>
             </div>
 
             <!-- TAMBAH VIDEO -->
@@ -741,17 +653,6 @@
                         <span class="count-badge" id="videoCount">0</span>
                     </div>
                     <div id="videoAddForm"></div>
-                </div>
-            </div>
-
-            <!-- TAMBAH REELS -->
-            <div class="tab-pane" id="tabAddReels">
-                <div class="add-container">
-                    <div class="pane-title">
-                        <i class="fab fa-tiktok"></i> Tambah Reels
-                        <span class="count-badge" id="reelsCount">0</span>
-                    </div>
-                    <div id="reelsAddForm"></div>
                 </div>
             </div>
 
@@ -767,16 +668,12 @@
             </div>
         </div>
 
-        <!-- BOTTOM NAV -->
         <div class="bottom-nav">
             <button class="nav-item active" data-tab="tabFeed">
                 <i class="fas fa-home"></i> Beranda
             </button>
             <button class="nav-item" data-tab="tabAddVideo">
                 <i class="fab fa-youtube"></i> Video
-            </button>
-            <button class="nav-item" data-tab="tabAddReels">
-                <i class="fab fa-tiktok"></i> Reels
             </button>
             <button class="nav-item" data-tab="tabAddAudio">
                 <i class="fas fa-headphones"></i> Audio
@@ -805,7 +702,6 @@
         </div>
     </div>
 
-    <!-- TOAST -->
     <div id="toast" class="toast"></div>
 
     <script>
@@ -815,21 +711,17 @@
         let darkMode = false;
         let feedData = [];
         let nextId = 1;
-        let tiktokCache = {};
 
-        // DOM refs
+        const ADMIN_EMAIL = 'dpemburu456@gmail.com';
+        const ADMIN_PASS = 'cahangon123';
+
         const feedContainer = document.getElementById('feedContainer');
         const videoAddForm = document.getElementById('videoAddForm');
-        const reelsAddForm = document.getElementById('reelsAddForm');
         const audioAddForm = document.getElementById('audioAddForm');
         const authLabel = document.getElementById('authLabel');
         const authBtn = document.getElementById('authBtn');
         const loginModal = document.getElementById('loginModal');
         const toastEl = document.getElementById('toast');
-
-        // ======================== ADMIN CREDENTIALS ========================
-        const ADMIN_EMAIL = 'dpemburu456@gmail.com';
-        const ADMIN_PASS = 'cahangon123';
 
         // ======================== TOAST ========================
         function toast(msg, isError = false) {
@@ -970,141 +862,7 @@
             updateCounts();
         }
 
-        // ======================== TIKTOK OEMBED ========================
-        function getTikTokEmbedUrl(url) {
-            // Ekstrak video ID dari URL TikTok
-            const patterns = [
-                /tiktok\.com\/@[\w.]+\/video\/(\d+)/,
-                /tiktok\.com\/v\/(\d+)/,
-                /vm\.tiktok\.com\/(\w+)/
-            ];
-            
-            let videoId = null;
-            for (let p of patterns) {
-                const match = url.match(p);
-                if (match) {
-                    videoId = match[1];
-                    break;
-                }
-            }
-            
-            if (videoId) {
-                return `https://www.tiktok.com/embed/v2/${videoId}`;
-            }
-            
-            // Coba dengan oEmbed API
-            return `https://www.tiktok.com/oembed?url=${encodeURIComponent(url)}`;
-        }
-
-        async function loadTikTokEmbed(url, container) {
-            try {
-                // Tampilkan loading
-                container.innerHTML = `
-                    <div class="feed-loading">
-                        <div class="spinner"></div>
-                        <p style="margin-top:8px;font-size:12px;">Memuat TikTok...</p>
-                    </div>
-                `;
-
-                // Coba dengan oEmbed API dulu
-                const oembedUrl = `https://www.tiktok.com/oembed?url=${encodeURIComponent(url)}`;
-                const response = await fetch(oembedUrl);
-                
-                if (response.ok) {
-                    const data = await response.json();
-                    // Gunakan HTML dari oEmbed
-                    container.innerHTML = `
-                        <div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:#000;">
-                            <div style="width:100%;height:100%;">
-                                ${data.html || ''}
-                            </div>
-                        </div>
-                    `;
-                    
-                    // Eksekusi script TikTok
-                    const scripts = container.querySelectorAll('script');
-                    scripts.forEach(oldScript => {
-                        const newScript = document.createElement('script');
-                        newScript.textContent = oldScript.textContent;
-                        document.head.appendChild(newScript);
-                    });
-                    
-                    return;
-                }
-
-                // Fallback: gunakan embed langsung
-                const videoId = url.match(/\/video\/(\d+)/);
-                if (videoId) {
-                    container.innerHTML = `
-                        <div style="width:100%;height:100%;background:#000;display:flex;align-items:center;justify-content:center;">
-                            <iframe 
-                                src="https://www.tiktok.com/embed/v2/${videoId[1]}"
-                                style="width:100%;height:100%;border:none;"
-                                allowfullscreen
-                            ></iframe>
-                        </div>
-                    `;
-                } else {
-                    throw new Error('Tidak bisa memuat TikTok');
-                }
-            } catch (error) {
-                console.error('TikTok load error:', error);
-                container.innerHTML = `
-                    <div class="media-error">
-                        <i class="fab fa-tiktok"></i>
-                        <p>Gagal memuat TikTok</p>
-                        <small style="color:var(--text-secondary);">Coba buka link langsung: <a href="${url}" target="_blank" style="color:var(--primary);">klik di sini</a></small>
-                    </div>
-                `;
-            }
-        }
-
-        // ======================== ADD MEDIA ========================
-        function addFeedItem(type, url, title, addedBy) {
-            // Validasi URL
-            if (type === 'video' && !extractVideoId(url)) {
-                toast('Link YouTube tidak valid!', true);
-                return false;
-            }
-            
-            if (type === 'reels') {
-                const isValid = url.includes('tiktok.com') || url.includes('facebook.com') || url.includes('fb.watch');
-                if (!isValid) {
-                    toast('Hanya TikTok & Facebook Reels!', true);
-                    return false;
-                }
-            }
-
-            const item = {
-                id: nextId++,
-                type: type,
-                url: url,
-                title: title || getDefaultTitle(type, url),
-                addedBy: addedBy || (currentUser ? currentUser.email : 'anonymous'),
-                addedAt: Date.now(),
-                isAdmin: isAdmin
-            };
-
-            if (type === 'video') {
-                const vidId = extractVideoId(url);
-                if (vidId) item.videoId = vidId;
-            }
-
-            feedData.unshift(item);
-            saveFeed();
-            toast('Media berhasil ditambahkan ke Beranda! 🎉');
-            return true;
-        }
-
-        function getDefaultTitle(type, url) {
-            switch(type) {
-                case 'video': return 'Video YouTube';
-                case 'reels': return url.includes('tiktok') ? 'TikTok Reels' : 'Facebook Reels';
-                case 'audio': return 'Audio';
-                default: return 'Media';
-            }
-        }
-
+        // ======================== EXTRACT VIDEO ID ========================
         function extractVideoId(url) {
             const patterns = [
                 /(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&?#]+)/,
@@ -1117,6 +875,36 @@
             return null;
         }
 
+        // ======================== ADD MEDIA ========================
+        function addFeedItem(type, url, title, addedBy) {
+            if (type === 'video') {
+                const vidId = extractVideoId(url);
+                if (!vidId) {
+                    toast('Link YouTube tidak valid!', true);
+                    return false;
+                }
+            }
+
+            const item = {
+                id: nextId++,
+                type: type,
+                url: url,
+                title: title || (type === 'video' ? 'Video YouTube' : 'Audio'),
+                addedBy: addedBy || (currentUser ? currentUser.email : 'anonymous'),
+                addedAt: Date.now(),
+                isAdmin: isAdmin
+            };
+
+            if (type === 'video') {
+                item.videoId = extractVideoId(url);
+            }
+
+            feedData.unshift(item);
+            saveFeed();
+            toast('Media berhasil ditambahkan ke Beranda! 🎉');
+            return true;
+        }
+
         // ======================== RENDER FEED ========================
         function renderFeed() {
             if (feedData.length === 0) {
@@ -1124,9 +912,9 @@
                     <div class="empty-feed">
                         <i class="fas fa-leaf"></i>
                         <h3>Belum ada media</h3>
-                        <p style="font-size:13px;">Jadilah yang pertama menambahkan video, reels, atau audio!</p>
+                        <p style="font-size:13px;">Jadilah yang pertama menambahkan video atau audio!</p>
                         <p style="font-size:12px;margin-top:8px;color:var(--placeholder);">
-                            <i class="fas fa-plus-circle"></i> Klik tab Video / Reels / Audio untuk menambah
+                            <i class="fas fa-plus-circle"></i> Klik tab Video / Audio untuk menambah
                         </p>
                     </div>
                 `;
@@ -1148,35 +936,6 @@
                                     allow="autoplay; encrypted-media" allowfullscreen></iframe>
                         </div>
                     `;
-                } else if (item.type === 'reels') {
-                    const isTikTok = item.url.includes('tiktok.com');
-                    const containerId = `tiktok-${item.id}`;
-                    
-                    if (isTikTok) {
-                        mediaHtml = `
-                            <div class="feed-media portrait" id="${containerId}">
-                                <div class="feed-loading">
-                                    <div class="spinner"></div>
-                                    <p style="margin-top:8px;font-size:12px;">Memuat TikTok...</p>
-                                </div>
-                            </div>
-                        `;
-                        // Load TikTok setelah render
-                        setTimeout(() => {
-                            const container = document.getElementById(containerId);
-                            if (container) {
-                                loadTikTokEmbed(item.url, container);
-                            }
-                        }, 100);
-                    } else {
-                        // Facebook Reels
-                        const embedUrl = `https://www.facebook.com/plugins/video.php?href=${encodeURIComponent(item.url)}&autoplay=1`;
-                        mediaHtml = `
-                            <div class="feed-media portrait">
-                                <iframe src="${embedUrl}" allow="autoplay; encrypted-media" allowfullscreen style="width:100%;height:100%;"></iframe>
-                            </div>
-                        `;
-                    }
                 } else if (item.type === 'audio') {
                     mediaHtml = `
                         <div class="feed-audio">
@@ -1189,10 +948,9 @@
                     `;
                 }
 
-                const typeLabel = item.type === 'video' ? 'Video' : item.type === 'reels' ? 'Reels' : 'Audio';
-                const typeIcon = item.type === 'video' ? 'fab fa-youtube' : 
-                                 item.type === 'reels' ? 'fab fa-tiktok' : 'fas fa-headphones';
-                const typeClass = item.type === 'video' ? 'video' : item.type === 'reels' ? 'reels' : 'audio';
+                const typeLabel = item.type === 'video' ? 'Video' : 'Audio';
+                const typeIcon = item.type === 'video' ? 'fab fa-youtube' : 'fas fa-headphones';
+                const typeClass = item.type === 'video' ? 'video' : 'audio';
 
                 return `
                     <div class="feed-item">
@@ -1299,21 +1057,6 @@
                 </div>
             ` : getLoginPrompt();
             
-            reelsAddForm.innerHTML = loggedIn ? `
-                <div class="add-form">
-                    <label>📱 Link Reels (TikTok / Facebook)</label>
-                    <input type="text" id="reelsUrlInput" placeholder="https://www.tiktok.com/@user/video/...">
-                    <label>📝 Judul Reels</label>
-                    <textarea id="reelsTitleInput" placeholder="Tulis judul reelsnya..."></textarea>
-                    <button class="btn-add" onclick="submitReels()">
-                        <i class="fas fa-plus-circle"></i> Tambahkan ke Beranda
-                    </button>
-                </div>
-                <div style="font-size:12px;color:var(--text-secondary);text-align:center;">
-                    <i class="fas fa-globe"></i> Media akan tampil di Beranda untuk semua orang
-                </div>
-            ` : getLoginPrompt();
-            
             audioAddForm.innerHTML = loggedIn ? `
                 <div class="add-form">
                     <label>🎵 Link Audio (MP3 / SoundCloud / Spotify)</label>
@@ -1335,7 +1078,7 @@
                 <div class="login-prompt">
                     <i class="fas fa-lock"></i>
                     <h3>Login untuk menambahkan media</h3>
-                    <p>Hanya pengguna terdaftar yang bisa membagikan video, reels, dan audio.</p>
+                    <p>Hanya pengguna terdaftar yang bisa membagikan video dan audio.</p>
                     <button class="btn-login-prompt" onclick="openLoginModal()">
                         <i class="fas fa-sign-in-alt"></i> Login Sekarang
                     </button>
@@ -1348,19 +1091,10 @@
             const url = document.getElementById('videoUrlInput').value.trim();
             const title = document.getElementById('videoTitleInput').value.trim() || 'Video YouTube';
             if (!url) { toast('Masukkan link YouTube!', true); return; }
+            if (!extractVideoId(url)) { toast('Link YouTube tidak valid!', true); return; }
             addFeedItem('video', url, title, currentUser.email);
             document.getElementById('videoUrlInput').value = '';
             document.getElementById('videoTitleInput').value = '';
-            switchTab('tabFeed');
-        }
-
-        function submitReels() {
-            const url = document.getElementById('reelsUrlInput').value.trim();
-            const title = document.getElementById('reelsTitleInput').value.trim() || 'Reels';
-            if (!url) { toast('Masukkan link Reels!', true); return; }
-            addFeedItem('reels', url, title, currentUser.email);
-            document.getElementById('reelsUrlInput').value = '';
-            document.getElementById('reelsTitleInput').value = '';
             switchTab('tabFeed');
         }
 
@@ -1374,12 +1108,10 @@
             switchTab('tabFeed');
         }
 
-        // Enter key support
         document.addEventListener('keypress', (e) => {
             if (e.key === 'Enter') {
                 const active = document.activeElement;
                 if (active && active.id === 'videoUrlInput') submitVideo();
-                else if (active && active.id === 'reelsUrlInput') submitReels();
                 else if (active && active.id === 'audioUrlInput') submitAudio();
             }
         });
@@ -1387,10 +1119,8 @@
         // ======================== COUNTS ========================
         function updateCounts() {
             const videos = feedData.filter(f => f.type === 'video').length;
-            const reels = feedData.filter(f => f.type === 'reels').length;
             const audios = feedData.filter(f => f.type === 'audio').length;
             document.getElementById('videoCount').textContent = videos;
-            document.getElementById('reelsCount').textContent = reels;
             document.getElementById('audioCount').textContent = audios;
         }
 
@@ -1451,7 +1181,7 @@
         });
 
         init();
-        console.log('🌿 Cah Angon Feed siap!');
+        console.log('🌿 Cah Angon siap!');
     </script>
 </body>
 </html>
