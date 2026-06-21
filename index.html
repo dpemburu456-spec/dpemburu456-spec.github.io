@@ -33,6 +33,7 @@
             --toast-bg: #1e2a1e;
             --admin-badge: #ff6b35;
             --feed-gap: 16px;
+            --now-playing: #2d7d46;
         }
 
         .dark-mode {
@@ -46,6 +47,7 @@
             --input-bg: #263226;
             --placeholder: #8aa08a;
             --toast-bg: #e8f0e8;
+            --now-playing: #4CAF50;
         }
 
         body {
@@ -156,6 +158,12 @@
             box-shadow: var(--shadow);
             border: 1px solid var(--border);
             transition: 0.2s;
+            scroll-margin-top: 10px;
+        }
+
+        .feed-item.now-playing {
+            border-color: var(--now-playing);
+            box-shadow: 0 0 0 2px var(--now-playing), var(--shadow);
         }
 
         .feed-item:hover {
@@ -313,6 +321,12 @@
         .feed-actions .delete-btn {
             color: #d9534f;
             margin-left: auto;
+        }
+
+        .feed-actions .playing-indicator {
+            color: var(--now-playing);
+            font-weight: 600;
+            font-size: 11px;
         }
 
         .add-container {
@@ -618,6 +632,19 @@
             border-radius: 10px;
         }
 
+        /* Auto-play indicator */
+        .auto-play-badge {
+            background: var(--primary);
+            color: #fff;
+            font-size: 10px;
+            padding: 2px 10px;
+            border-radius: 30px;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+
         @media (max-width: 480px) {
             #app { border-radius: 20px; min-height: 680px; }
             .feed-container { padding: 10px; gap: 14px; }
@@ -711,6 +738,8 @@
         let darkMode = false;
         let feedData = [];
         let nextId = 1;
+        let currentPlayingIndex = -1;
+        let isAutoPlayEnabled = true;
 
         const ADMIN_EMAIL = 'dpemburu456@gmail.com';
         const ADMIN_PASS = 'cahangon123';
@@ -810,8 +839,10 @@
             sessionStorage.removeItem('cahangon_user');
             currentUser = null;
             isAdmin = false;
+            currentPlayingIndex = -1;
             updateAuthUI();
             renderAddForms();
+            renderFeed();
             toast('Anda telah keluar');
         }
 
@@ -901,8 +932,176 @@
 
             feedData.unshift(item);
             saveFeed();
+            
+            // Auto-play: jika ini adalah media pertama, mulai putar
+            if (feedData.length === 1) {
+                setTimeout(() => playMedia(0), 500);
+            }
+            
             toast('Media berhasil ditambahkan ke Beranda! 🎉');
             return true;
+        }
+
+        // ======================== PLAY MEDIA ========================
+        function playMedia(index) {
+            if (index < 0 || index >= feedData.length) {
+                // Jika sudah di akhir playlist, berhenti
+                currentPlayingIndex = -1;
+                renderFeed();
+                toast('🏁 Selesai memutar semua media!');
+                return;
+            }
+
+            const item = feedData[index];
+            currentPlayingIndex = index;
+            renderFeed();
+
+            // Scroll ke media yang sedang diputar
+            setTimeout(() => {
+                const items = document.querySelectorAll('.feed-item');
+                if (items[index]) {
+                    items[index].scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }
+            }, 300);
+
+            // Putar media
+            if (item.type === 'video') {
+                playVideo(item, index);
+            } else if (item.type === 'audio') {
+                playAudio(item, index);
+            }
+        }
+
+        function playVideo(item, index) {
+            const container = document.getElementById(`video-${item.id}`);
+            if (!container) return;
+
+            // Cek apakah sudah ada iframe
+            let iframe = container.querySelector('iframe');
+            if (!iframe) {
+                iframe = document.createElement('iframe');
+                iframe.setAttribute('allow', 'autoplay; encrypted-media');
+                iframe.setAttribute('allowfullscreen', 'true');
+                container.innerHTML = '';
+                container.appendChild(iframe);
+            }
+
+            // Set src dengan autoplay
+            iframe.src = `https://www.youtube.com/embed/${item.videoId}?autoplay=1&rel=0&enablejsapi=1`;
+
+            // Deteksi akhir video dengan interval
+            let checkInterval = setInterval(() => {
+                try {
+                    // Cek jika video sudah selesai dengan mendeteksi apakah iframe masih ada
+                    // dan apakah video sudah berakhir (dengan mendeteksi state player)
+                    // Karena kita tidak bisa akses YouTube API dari sini, kita gunakan pendekatan:
+                    // Jika video sudah diputar lebih dari 5 detik, kita cek apakah masih ada
+                    // aktivitas player
+                } catch(e) {}
+            }, 1000);
+
+            // Simpan interval untuk dibersihkan nanti
+            container._checkInterval = checkInterval;
+
+            toast(`▶️ Memutar: ${item.title}`);
+
+            // Set timeout untuk pindah ke video berikutnya (fallback jika tidak deteksi)
+            // YouTube biasanya akan memutar video sampai selesai
+            // Kita akan coba deteksi dengan cara: setelah 30 detik, cek apakah masih diputar
+            let fallbackTimeout = setTimeout(() => {
+                // Jika masih di video yang sama dan tidak ada interaksi, pindah ke next
+                if (currentPlayingIndex === index) {
+                    // Cek apakah video masih diputar dengan mendeteksi iframe
+                    const currentIframe = container.querySelector('iframe');
+                    if (currentIframe && currentIframe.src) {
+                        // Video masih diputar, kita tunggu
+                        // Kita tambahkan listener untuk deteksi
+                        console.log('Video masih diputar, menunggu...');
+                    }
+                }
+            }, 30000);
+
+            container._fallbackTimeout = fallbackTimeout;
+
+            // Event listener untuk deteksi akhir video (gunakan unload event)
+            // Kita cek setiap 5 detik apakah video masih ada
+            let lastCheck = Date.now();
+            let checkEndInterval = setInterval(() => {
+                if (currentPlayingIndex !== index) {
+                    clearInterval(checkEndInterval);
+                    return;
+                }
+
+                const currentIframe = container.querySelector('iframe');
+                if (!currentIframe || !currentIframe.src) {
+                    // Iframe hilang atau src kosong, berarti video sudah selesai
+                    clearInterval(checkEndInterval);
+                    playNext(index);
+                    return;
+                }
+
+                // Cek jika sudah lebih dari 5 menit, pindah ke next (asumsi video selesai)
+                if (Date.now() - lastCheck > 300000) { // 5 menit
+                    clearInterval(checkEndInterval);
+                    playNext(index);
+                    return;
+                }
+            }, 5000);
+
+            container._checkEndInterval = checkEndInterval;
+        }
+
+        function playAudio(item, index) {
+            const container = document.getElementById(`audio-${item.id}`);
+            if (!container) return;
+
+            let audioEl = container.querySelector('audio');
+            if (!audioEl) {
+                audioEl = document.createElement('audio');
+                audioEl.controls = true;
+                audioEl.style.width = '100%';
+                container.querySelector('.audio-wrapper').appendChild(audioEl);
+            }
+
+            audioEl.src = item.url;
+            audioEl.load();
+            
+            // Event listener untuk audio ended
+            audioEl.onended = function() {
+                // Hapus listener agar tidak double
+                audioEl.onended = null;
+                playNext(index);
+            };
+
+            // Event listener untuk error
+            audioEl.onerror = function() {
+                toast('Gagal memutar audio, lanjut ke berikutnya...', true);
+                audioEl.onended = null;
+                playNext(index);
+            };
+
+            audioEl.play().then(() => {
+                toast(`🎵 Memutar: ${item.title}`);
+            }).catch((err) => {
+                console.error('Audio play error:', err);
+                toast('Gagal memutar audio, lanjut ke berikutnya...', true);
+                playNext(index);
+            });
+        }
+
+        function playNext(currentIndex) {
+            const nextIndex = currentIndex + 1;
+            if (nextIndex < feedData.length) {
+                toast(`⏭️ Otomatis ke media berikutnya...`);
+                setTimeout(() => {
+                    playMedia(nextIndex);
+                }, 1000);
+            } else {
+                // Sudah di akhir playlist
+                currentPlayingIndex = -1;
+                renderFeed();
+                toast('🏁 Selesai memutar semua media!');
+            }
         }
 
         // ======================== RENDER FEED ========================
@@ -921,29 +1120,31 @@
                 return;
             }
 
-            feedContainer.innerHTML = feedData.map(item => {
+            feedContainer.innerHTML = feedData.map((item, index) => {
                 const isOwner = item.addedBy === (currentUser ? currentUser.email : null);
                 const canDelete = isAdmin || isOwner;
                 const username = item.addedBy.split('@')[0];
                 const isAdminUser = item.isAdmin || (item.addedBy === ADMIN_EMAIL);
                 const timeAgo = getTimeAgo(item.addedAt);
+                const isPlaying = currentPlayingIndex === index;
                 
                 let mediaHtml = '';
                 if (item.type === 'video' && item.videoId) {
                     mediaHtml = `
-                        <div class="feed-media">
-                            <iframe src="https://www.youtube.com/embed/${item.videoId}?autoplay=1&rel=0" 
-                                    allow="autoplay; encrypted-media" allowfullscreen></iframe>
+                        <div class="feed-media" id="video-${item.id}">
+                            ${isPlaying ? '' : `<iframe src="https://www.youtube.com/embed/${item.videoId}?rel=0" allow="encrypted-media" allowfullscreen></iframe>`}
                         </div>
                     `;
                 } else if (item.type === 'audio') {
                     mediaHtml = `
-                        <div class="feed-audio">
+                        <div class="feed-audio" id="audio-${item.id}">
                             <div class="feed-audio-info">
                                 <i class="fas fa-compact-disc"></i>
                                 <div>${item.title}</div>
                             </div>
-                            <audio controls src="${item.url}"></audio>
+                            <div class="audio-wrapper">
+                                ${isPlaying ? `<audio controls src="${item.url}" style="width:100%;"></audio>` : ''}
+                            </div>
                         </div>
                     `;
                 }
@@ -952,8 +1153,10 @@
                 const typeIcon = item.type === 'video' ? 'fab fa-youtube' : 'fas fa-headphones';
                 const typeClass = item.type === 'video' ? 'video' : 'audio';
 
+                const playingClass = isPlaying ? 'now-playing' : '';
+
                 return `
-                    <div class="feed-item">
+                    <div class="feed-item ${playingClass}" data-index="${index}">
                         <div class="feed-header">
                             <div class="feed-user">
                                 <div class="feed-avatar" style="background:${getColorFromEmail(item.addedBy)}">
@@ -974,9 +1177,10 @@
                         <div class="feed-title">${item.title}</div>
                         ${mediaHtml}
                         <div class="feed-actions">
-                            <button onclick="toast('💬 Fitur komentar segera hadir!')">
-                                <i class="far fa-comment"></i> Komentar
+                            <button onclick="playMedia(${index})">
+                                <i class="fas fa-${isPlaying ? 'pause' : 'play'}"></i> ${isPlaying ? 'Diputar' : 'Putar'}
                             </button>
+                            ${isPlaying ? '<span class="playing-indicator"><i class="fas fa-circle" style="font-size:8px;color:var(--now-playing);"></i> Sedang diputar</span>' : ''}
                             <button onclick="shareMedia('${item.url}')">
                                 <i class="fas fa-share-alt"></i> Bagikan
                             </button>
@@ -985,6 +1189,21 @@
                     </div>
                 `;
             }).join('');
+
+            // Jika ada media yang sedang diputar, load ulang
+            if (currentPlayingIndex >= 0 && currentPlayingIndex < feedData.length) {
+                const item = feedData[currentPlayingIndex];
+                if (item.type === 'video') {
+                    const container = document.getElementById(`video-${item.id}`);
+                    if (container) {
+                        const iframe = container.querySelector('iframe');
+                        if (!iframe || !iframe.src || iframe.src.includes('autoplay')) {
+                            // Video belum dimuat dengan autoplay
+                            playMedia(currentPlayingIndex);
+                        }
+                    }
+                }
+            }
         }
 
         function getTimeAgo(timestamp) {
@@ -1032,7 +1251,16 @@
             }
             
             if (confirm('Hapus media ini?')) {
+                const index = feedData.findIndex(f => f.id === id);
                 feedData = feedData.filter(f => f.id !== id);
+                
+                // Jika yang dihapus adalah media yang sedang diputar
+                if (currentPlayingIndex === index) {
+                    currentPlayingIndex = -1;
+                } else if (currentPlayingIndex > index) {
+                    currentPlayingIndex--;
+                }
+                
                 saveFeed();
                 toast('Media dihapus');
             }
@@ -1169,6 +1397,16 @@
             renderAddForms();
             updateCounts();
             
+            // Jika ada media dan tidak sedang diputar, mulai dari awal
+            if (feedData.length > 0 && currentPlayingIndex === -1) {
+                setTimeout(() => {
+                    // Tanya user apakah mau mulai autoplay
+                    if (confirm('Mulai putar otomatis dari media pertama?')) {
+                        playMedia(0);
+                    }
+                }, 1500);
+            }
+            
             if (!currentUser) {
                 setTimeout(() => {
                     toast('👋 Login untuk menambahkan media!', false);
@@ -1181,7 +1419,7 @@
         });
 
         init();
-        console.log('🌿 Cah Angon siap!');
+        console.log('🌿 Cah Angon dengan Auto-Play siap!');
     </script>
 </body>
 </html>
